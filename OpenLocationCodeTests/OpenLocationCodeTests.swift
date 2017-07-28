@@ -47,12 +47,33 @@ class OpenLocationCodeTests: XCTestCase {
         assert(fabs(fabs(test.longitude) - fabs(-118.194828)) < epsilon)
     }
     
+    func testObjCreationWithCode() {
+        let olc = try? OpenLocationCode("8FW4V75V+8Q")
+        let test = olc?.getCodeArea()
+        if (test != nil) {
+            assert((test!.LatLng().latitude - 48.858313) < epsilon)
+            assert((test!.LatLng().longitude - 2.294438) < epsilon)
+        }
+        
+    }
     
+    func testObjCreationWithLatLng() {
+        // just testing the limits here
+        let olc = try? OpenLocationCode(latitude: 48.858093, longitude: 2.294694, codeLength: 15)
+        let test = olc?.getCodeArea()
+        if (test != nil) {
+            print(test!.LatLng()) // With a code length of 15 we should have resolution down to the 6th decimal place
+            assert(fabs(test!.LatLng().latitude - 48.858093) < epsilon/10)
+            assert(fabs(test!.LatLng().longitude - 2.294694) < epsilon/10)
+        }
+    }
     
     func testPerformanceExample() {
-        // This is an example of a performance test case.
+        // See how long it takes to make a 1000 encoding and decodings (that's what this does behind the scenes)... the most complex of initializers with high resolution
         self.measure {
-            // Put the code you want to measure the time of here.
+            for _ in 0...1000 {
+                let _ = try? OpenLocationCode(latitude: 48.858093, longitude: 2.294694, codeLength: 15)
+            }
         }
     }
     

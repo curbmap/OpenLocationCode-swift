@@ -7,6 +7,14 @@
 //
 
 import Foundation
+/*
+ * Since Open Location Codes are not actually supposed to represent a point, but rather a region,
+ * the code area represents the range of possiblities in a grid of latitude and longitude. Generally,
+ * on google's http://plus.codes website the position of OLC is returned as one set of latitude and longitude.
+ * You might ask, "how can that be?"... They take the average.
+ * Remember that the specificity of a CodeArea is actually representative of length of resolution of the initial code.
+ * You'll get a larger CodeArea for a shorter code.
+ */
 public struct CodeArea {
     let latitudeLow: Float64;
     let longitudeLow: Float64;

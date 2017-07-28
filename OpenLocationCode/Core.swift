@@ -22,7 +22,7 @@ enum OpenLocationCodeError:Error {
 public class OpenLocationCode {
     static private let DEFAULT_CODE_LENGTH: Int = 10 // Not including + IMPORTANT!! This is the point where lat/lng diverge in relationship
     static private let LENGTH_BASE: Int = 8 // For a long code
-    static private let MAX_CODE_LENGTH: Int = 12 // Not including +, This is just a suggestion, since things are skewed after 11
+    static private let MAX_CODE_LENGTH: Int = 14 // Not including +, This is just a suggestion, since things are skewed after 11
     static private let CODE_ALPHABET: [Character] = ["2","3","4","5","6","7","8","9","C","F","G","H","J","M","P","Q","R","V","W","X"]
     static private let PLUS_SEPARATOR: Character = "+"
     static private let BASE_FOR_PREFIX: Float64 = 20
@@ -37,12 +37,12 @@ public class OpenLocationCode {
     static public let LONGITUDE_MAX: Float64 = 180.0
     static public let LATITUDE_MIN: Float64 = -90.0
     static public let LATITUDE_MAX: Float64 = 90.0
-    static private let RESOLUTION_STEPS:[Float64] = [20.0, 1.0, 0.05, 0.0025, 0.000125]
+    static private let RESOLUTION_STEPS:[Float64] = [20.0, 1.0, 0.05, 0.0025, 0.000125] // 5 pairs of Lat, Lng
     private var _code: String = ""
     private var _code_type: Int = -1
     private var _LatLng: (latitude: Float64, longitude: Float64) = (latitude: 0.0, longitude: 0.0)
     private var _codeArea: CodeArea?
-    //MARK: - Constructors
+    //MARK: - Initializers
     /*
      * From code string, will decode to LatLng pair
      * From lat lng, will encode to OLC code of 10 or given length code
@@ -52,11 +52,16 @@ public class OpenLocationCode {
         self._code_type = OpenLocationCode.isValidOLC(code: code.uppercased())
         if (_code_type == 0 || _code_type == 1) {
             self._code = code.uppercased()
+            // It's already a valid code, so get the code area for it as well
+            self._codeArea = try! OpenLocationCode.decode(code: self._code)
         } else {
             throw OpenLocationCodeError.invalidCode
         }
         // If we throw an error in creation, it wasn't a valid code
     }
+    /*
+     * Initializers from lat/lng which do both a forward and backward pass
+     */
     public init(latitude: Float64, longitude: Float64, codeLength: Int) throws {
         self._LatLng = (latitude: latitude, longitude: longitude)
         self._code = try! OpenLocationCode.encode(LatLng: self._LatLng, codeLength: codeLength)
@@ -68,6 +73,9 @@ public class OpenLocationCode {
     //MARK: - Getters
     public func getCode() -> String {
         return self._code
+    }
+    public func getCodeArea() -> CodeArea? {
+        return self._codeArea
     }
     //MARK: - Validating
     public static func isValidOLC(code: String) -> Int {
@@ -329,7 +337,9 @@ public class OpenLocationCode {
     }
     
     /*
-     * Actually,
+     * Decode pairs works from the first pair up to the 5th pair (5 steps of resolution).
+     * So the maximum length of the codePrefix is 10, which is split into two arrays of 
+     * equal length (max 5 each).
      */
     private static func decodePairs(_ codePrefix: String) -> CodeArea {
         let latArray = codePrefix.characters.enumerated().filter{ $0.offset % 2 == 0 }
@@ -354,6 +364,11 @@ public class OpenLocationCode {
         return (low: value, high: value + RESOLUTION_STEPS[i - 1])
     }
     
+    /*
+     * Starting after the last step of resolution each subsequent character represents a combination of 
+     * Latitude and longitude values which are ordered according to the MATRIX_FOR_PLUS (5 rows, 4 columns)
+     * since the base is 20.
+     */
     private static func decodeGrid(_ codeSuffix: String) -> CodeArea {
         var latitudeLow: Float64 = 0.0
         var longitudeLow: Float64 = 0.0
