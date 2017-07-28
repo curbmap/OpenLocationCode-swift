@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D56E17691F2A974000072EC5 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D56E17681F2A974000072EC5 /* LICENSE */; };
+		D56E176B1F2AC3DD00072EC5 /* CodeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */; };
 		D5A3C53A1F283B50001C10B8 /* OpenLocationCode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5A3C5301F283B50001C10B8 /* OpenLocationCode.framework */; };
 		D5A3C53F1F283B50001C10B8 /* OpenLocationCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C53E1F283B50001C10B8 /* OpenLocationCodeTests.swift */; };
 		D5A3C5411F283B50001C10B8 /* OpenLocationCode.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D5A3C54B1F283DC4001C10B8 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C54A1F283DC4001C10B8 /* Core.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +26,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D56E17681F2A974000072EC5 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeArea.swift; sourceTree = "<group>"; };
 		D5A3C5301F283B50001C10B8 /* OpenLocationCode.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenLocationCode.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenLocationCode.h; sourceTree = "<group>"; };
 		D5A3C5341F283B50001C10B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5A3C5391F283B50001C10B8 /* OpenLocationCodeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenLocationCodeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A3C53E1F283B50001C10B8 /* OpenLocationCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLocationCodeTests.swift; sourceTree = "<group>"; };
 		D5A3C5401F283B50001C10B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D5A3C54A1F283DC4001C10B8 /* Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +79,9 @@
 			children = (
 				D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */,
 				D5A3C5341F283B50001C10B8 /* Info.plist */,
+				D5A3C54A1F283DC4001C10B8 /* Core.swift */,
+				D56E17681F2A974000072EC5 /* LICENSE */,
+				D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */,
 			);
 			path = OpenLocationCode;
 			sourceTree = "<group>";
@@ -149,6 +158,7 @@
 					D5A3C52F1F283B50001C10B8 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = CNKFCAS44G;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					D5A3C5381F283B50001C10B8 = {
@@ -181,6 +191,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D56E17691F2A974000072EC5 /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +209,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5A3C54B1F283DC4001C10B8 /* Core.swift in Sources */,
+				D56E176B1F2AC3DD00072EC5 /* CodeArea.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +337,7 @@
 		D5A3C5451F283B50001C10B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = CNKFCAS44G;
@@ -336,6 +350,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.curbmap.OpenLocationCode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -343,6 +358,7 @@
 		D5A3C5461F283B50001C10B8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = CNKFCAS44G;
@@ -362,6 +378,7 @@
 		D5A3C5481F283B50001C10B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = CNKFCAS44G;
 				INFOPLIST_FILE = OpenLocationCodeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -374,6 +391,7 @@
 		D5A3C5491F283B50001C10B8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = CNKFCAS44G;
 				INFOPLIST_FILE = OpenLocationCodeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -402,6 +420,7 @@
 				D5A3C5461F283B50001C10B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D5A3C5471F283B50001C10B8 /* Build configuration list for PBXNativeTarget "OpenLocationCodeTests" */ = {
 			isa = XCConfigurationList;
@@ -410,6 +429,7 @@
 				D5A3C5491F283B50001C10B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

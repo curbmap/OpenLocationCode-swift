@@ -1,0 +1,386 @@
+//
+//  Core.swift
+//  OpenLocationCode
+//
+//  Created by Eli Selkin on 7/25/17.
+//  Copyright © 2017 curbmap. All rights reserved.
+
+import Foundation
+
+// https://github.com/google/open-location-code/blob/master/python/openlocationcode.py
+// Obviously stealing ideas, Google has the best ideas. Please see the LICENSE file
+
+enum OpenLocationCodeError:Error {
+    case invalidCode
+    case invalidShortCode
+    case invalidLongCode
+    case encodingError
+    case decodingError
+}
+
+// Future version may switch from Float64 to NSDecimalNumber to handle more places of precision
+public class OpenLocationCode {
+    static private let DEFAULT_CODE_LENGTH: Int = 10 // Not including + IMPORTANT!! This is the point where lat/lng diverge in relationship
+    static private let LENGTH_BASE: Int = 8 // For a long code
+    static private let MAX_CODE_LENGTH: Int = 12 // Not including +, This is just a suggestion, since things are skewed after 11
+    static private let CODE_ALPHABET: [Character] = ["2","3","4","5","6","7","8","9","C","F","G","H","J","M","P","Q","R","V","W","X"]
+    static private let PLUS_SEPARATOR: Character = "+"
+    static private let BASE_FOR_PREFIX: Float64 = 20
+    static private let MATRIX_FOR_PLUS:[[Character]] = [["2", "3", "4", "5"],
+                                                        ["6", "7", "8", "9"],
+                                                        ["C", "F", "G", "H"],
+                                                        ["J", "M", "P", "Q"],
+                                                        ["R", "V", "W", "X"]]
+    static private let MATRIX_FOR_PLUS_DIM: (rows: Float64, cols: Float64) = (rows: 5.0, cols: 4.0)
+    static private let PADDING_CHARACTER: Character = "0"
+    static public let LONGITUDE_MIN: Float64 = -180.0
+    static public let LONGITUDE_MAX: Float64 = 180.0
+    static public let LATITUDE_MIN: Float64 = -90.0
+    static public let LATITUDE_MAX: Float64 = 90.0
+    static private let RESOLUTION_STEPS:[Float64] = [20.0, 1.0, 0.05, 0.0025, 0.000125]
+    private var _code: String = ""
+    private var _code_type: Int = -1
+    private var _LatLng: (latitude: Float64, longitude: Float64) = (latitude: 0.0, longitude: 0.0)
+    private var _codeArea: CodeArea?
+    //MARK: - Constructors
+    /*
+     * From code string, will decode to LatLng pair
+     * From lat lng, will encode to OLC code of 10 or given length code
+     *
+     */
+    public init(_ code: String) throws {
+        self._code_type = OpenLocationCode.isValidOLC(code: code.uppercased())
+        if (_code_type == 0 || _code_type == 1) {
+            self._code = code.uppercased()
+        } else {
+            throw OpenLocationCodeError.invalidCode
+        }
+        // If we throw an error in creation, it wasn't a valid code
+    }
+    public init(latitude: Float64, longitude: Float64, codeLength: Int) throws {
+        self._LatLng = (latitude: latitude, longitude: longitude)
+        self._code = try! OpenLocationCode.encode(LatLng: self._LatLng, codeLength: codeLength)
+        self._codeArea = try! OpenLocationCode.decode(code: self._code)
+    }
+    public convenience init(latitude: Float64, longitude: Float64) throws {
+        try! self.init(latitude: latitude, longitude: longitude, codeLength: 10)
+    }
+    //MARK: - Getters
+    public func getCode() -> String {
+        return self._code
+    }
+    //MARK: - Validating
+    public static func isValidOLC(code: String) -> Int {
+        // Some might argue that an empty code is valid, but we won't here
+        if (code == "") {
+            return -1
+        }
+        let code_array = code.characters
+        var pos = 0
+        var separators = 0
+        var separator_position = -1
+        var paddingPos = -1
+        var paddingEnd = -1
+        for letter in code_array {
+            let checkedLetter = OpenLocationCode.CODE_ALPHABET.index(of: letter)
+            // Verifies all characters come from the alphabet or +, 0
+            if (letter != OpenLocationCode.PADDING_CHARACTER && letter != OpenLocationCode.PLUS_SEPARATOR && checkedLetter == nil) {
+                return -1
+            }
+            // Padding cannot be separated by non-padding characters
+            if (checkedLetter != nil && paddingPos != -1) {
+                return -1
+            }
+            // Keep track of how many separators
+            if (letter == OpenLocationCode.PLUS_SEPARATOR) {
+                separators += 1
+                separator_position = pos
+            }
+            if (letter == OpenLocationCode.PADDING_CHARACTER){
+                if (paddingPos == -1) { paddingPos = pos }
+                paddingEnd = pos
+                // Check if that beginning padding position is in an incorrect position
+                if (paddingPos == 0 || paddingPos % 2 == 1) {
+                    return -1
+                }
+            }
+            pos += 1
+        }
+
+        /*
+         * Must have even padding. Padding can only happen before the separator.
+         */
+        if ((paddingPos != -1) && ((paddingEnd - paddingPos + 1) % 2 != 0)) {
+            return -1
+        }
+        /*
+         * There must only be exactly one separator, it cannot be past the 9th character, and it cannot be at an odd position
+         */
+        if (separators != 1 || separator_position > OpenLocationCode.LENGTH_BASE || separator_position % 2 == 1) {
+            return -1
+        }
+        if (isValidShortOLC(code: code_array, separator_pos: separator_position)) {
+            return 0
+        } else if (isValidLongOLC(code: code_array, separator_pos: separator_position)) {
+            return 1
+        }
+        return -1
+    }
+    
+    // MARK: - Short Open Location Codes
+    /**
+     * Short codes should be 4 characters, a +, followed by 0 or more characters.
+     * Generally, these codes are 4-7 characters long, not including the +
+     */
+    public static func isValidShortOLC(code: String.CharacterView, separator_pos: Int) -> Bool {
+        if (separator_pos >= 0 && separator_pos < OpenLocationCode.LENGTH_BASE) {
+            return true
+        }
+        return false
+    }
+
+    // MARK: - Long Open Location Codes
+    /**
+     * Long codes are at least 8 characters long. They may then include a + followed by 
+     * 0-x number of further code characters. The appended string of code characters follows
+     * a different decoding/encoding scheme but using the same character space.
+     
+     * Here we check the bounds of the code to make sure it's within
+     */
+    public static func isValidLongOLC(code: String.CharacterView, separator_pos: Int) -> Bool {
+        // If it's a short code, it's not a long code... See google python implementation
+        if (OpenLocationCode.isValidShortOLC(code: code, separator_pos: separator_pos)) {
+            return false
+        }
+        // We can use ! because we are sure all characters exist in the alphabet at this time
+        let firstLat = Float64(OpenLocationCode.CODE_ALPHABET.index(of: code[code.startIndex])!) * OpenLocationCode.BASE_FOR_PREFIX
+        if (firstLat >= OpenLocationCode.LATITUDE_MAX * 2.0) {
+            return false
+        }
+        if (code.count >= 2) {
+            let firstLng = Float64(OpenLocationCode.CODE_ALPHABET.index(of: code[code.index(code.startIndex, offsetBy: 1)])!) * OpenLocationCode.BASE_FOR_PREFIX
+            if (firstLng >= OpenLocationCode.LONGITUDE_MAX * 2.0) {
+                return false
+            }
+        }
+        return true
+    }
+    
+    // MARK: - Encoding From LatLng pair
+    public static func encode(LatLng: (latitude: Float64, longitude: Float64), codeLength: Int = OpenLocationCode.DEFAULT_CODE_LENGTH) throws -> String {
+        if ((codeLength < 2) || (codeLength < LENGTH_BASE && codeLength % 2 == 1)) {
+            throw OpenLocationCodeError.encodingError
+        }
+        var working_latitude = clipLatitude(latitude: LatLng.latitude)
+        let working_longitude = normalizeLongitude(longitude: LatLng.longitude)
+        if (working_latitude == 90.0) {
+            working_latitude = working_latitude - precision_code_length(codeLength: codeLength)
+        }
+        var code: String = encodePairs(latitude: working_latitude, longitude: working_longitude, codeLength: min(codeLength, DEFAULT_CODE_LENGTH))
+        if (codeLength > DEFAULT_CODE_LENGTH) {
+            code += encodeGrid(latitude: working_latitude, longitude: working_longitude, codeLenAfterDefaultLen: codeLength - DEFAULT_CODE_LENGTH)
+        }
+        return code
+    }
+    
+    // MARK: - Helper Functions
+    /*
+     * If the latitude is greater than 90.0, make it 90.0, if less than -90.0, make it -90.0
+     */
+    public static func clipLatitude(latitude: Float64) -> Float64 {
+        return fmin(90.0, fmax(-90.0, latitude))
+    }
+    
+    // MARK: Normalize Longitude
+    /*
+     * If longitude is less than min, make it a positive angle (less than 180). 
+     * If a longitude is greater than max, make it a negative one (greater than -180).
+     */
+    public static func normalizeLongitude(longitude: Float64) -> Float64 {
+        var tempLongitude = longitude
+        while (tempLongitude < OpenLocationCode.LONGITUDE_MIN) {
+            tempLongitude = longitude + (2.0 * LONGITUDE_MAX)
+        }
+        while (tempLongitude >= 180) {
+            tempLongitude = tempLongitude + (2.0 * LONGITUDE_MIN)
+        }
+        return tempLongitude;
+    }
+    
+    // MARK: Powers With Negative Exponents
+    /*
+     * From C++ version of OLC implementation
+     * https://github.com/google/open-location-code/blob/master/cpp/openlocationcode.cc
+     */
+    public static func powNeg(base: Float64, exponent: Float64) -> Float64 {
+        if (exponent == 0) {
+            return 1.0
+        } else if (exponent > 0) {
+            return pow(base, exponent)
+        } else {
+            return 1/(pow(base, fabs(exponent)))
+        }
+    }
+    
+    // MARK: Calculate Precision For OLC length
+    public static func precision_code_length(codeLength: Int) -> Float64 {
+        if (codeLength <= DEFAULT_CODE_LENGTH) {
+            return powNeg(base: BASE_FOR_PREFIX, exponent: floor(Double(Int(codeLength / -2) + 2)));
+        }
+        return powNeg(base: BASE_FOR_PREFIX, exponent: -3) / pow(5.0, Float64(codeLength - DEFAULT_CODE_LENGTH));
+    }
+    
+    // MARK: - Encode LatLng Pairs up to 10 places
+    /*
+     * https://github.com/google/open-location-code/blob/master/python/openlocationcode.py
+     */
+    private static func encodePairs(latitude: Float64, longitude: Float64, codeLength: Int) -> String {
+        var code: [Character] = []
+        var adjustedLatitude = latitude + LATITUDE_MAX
+        var adjustedLongitude = longitude + LONGITUDE_MAX
+        var char_count = 0
+        while (char_count < codeLength) {
+            /* I don't know what the limitations are here rather than the mathematical way the C++ from google handles this.
+             * For the moment, I will use the array of preset values for resolution values, which is the way the rust and python do it.
+             *
+             * Either way, we handle one resolution step for a pair of characters in the OLC
+             * Remembering, that this can go past the PLUS_SEPARATOR, we must add it at the 8th position (counting from 0)
+             */
+            let placeMultiplier = RESOLUTION_STEPS[Int(char_count/2)] // Int already does the floor
+            var digitValue = Int(adjustedLatitude / placeMultiplier)
+            adjustedLatitude -= (Float64(digitValue) * placeMultiplier)
+            code.append(CODE_ALPHABET[digitValue])
+            char_count += 1
+            digitValue = Int(adjustedLongitude / placeMultiplier)
+            adjustedLongitude -= (Float64(digitValue) * placeMultiplier)
+            code.append(CODE_ALPHABET[digitValue])
+            char_count += 1
+            if (char_count == LENGTH_BASE && char_count < codeLength) {
+                code.append(PLUS_SEPARATOR)
+            }
+        }
+        /*
+         * If we have finished a short code it needs to be filled to the separator with the padding character
+         */
+        while (char_count < LENGTH_BASE) {
+            code.append(PADDING_CHARACTER)
+            char_count += 1
+        }
+        if (char_count == LENGTH_BASE) {
+            code.append(PLUS_SEPARATOR)
+        }
+        return String(code)
+    }
+    
+    // Also stealing from the python and rust implementations from google
+    // https://github.com/google/open-location-code/blob/master/python/openlocationcode.py
+    private static func encodeGrid(latitude: Float64, longitude: Float64, codeLenAfterDefaultLen: Int) -> String {
+        var code: [Character] = []
+        // Initialize the multipliers to the same value, but they will change according to the dimensions of the grid
+        var latPlaceMultiplier = RESOLUTION_STEPS.last!
+        var lngPlaceMultiplier = RESOLUTION_STEPS.last!
+        // This is the remainder after we have calculated up to the last RESOLUTION step
+        var adjustedLatitude = (latitude + LATITUDE_MAX).truncatingRemainder(dividingBy: latPlaceMultiplier)
+        var adjustedLongitude = (longitude + LONGITUDE_MAX).truncatingRemainder(dividingBy: lngPlaceMultiplier)
+        for _ in 0..<codeLenAfterDefaultLen {
+            // FP Multiplication is usually less costly than division
+            let row = Int((adjustedLatitude * MATRIX_FOR_PLUS_DIM.rows) / latPlaceMultiplier)
+            let col = Int((adjustedLongitude * MATRIX_FOR_PLUS_DIM.cols) / lngPlaceMultiplier)
+            // Every subsequent iteration for a SINGLE character is a factor smaller from that last RESOLUTION step
+            latPlaceMultiplier /= MATRIX_FOR_PLUS_DIM.rows
+            lngPlaceMultiplier /= MATRIX_FOR_PLUS_DIM.cols
+            adjustedLatitude -= Float64(row) * latPlaceMultiplier
+            adjustedLongitude -= Float64(col) * lngPlaceMultiplier
+            code.append(MATRIX_FOR_PLUS[row][col])
+        }
+        return String(code)
+    }
+    
+    //MARK: - Decoding
+    public static func decode(code: String) throws -> CodeArea {
+        
+        if (OpenLocationCode.isValidOLC(code: code) != 1){
+            throw OpenLocationCodeError.decodingError
+        }
+        
+        let code_without_plus = String(code.uppercased().characters.filter{ CODE_ALPHABET.contains($0) })
+        // Separate the first 10 from the rest
+        let prefix_start = code_without_plus.startIndex
+        let suffix_start = code_without_plus.index(prefix_start, offsetBy: 10)
+        let code_prefix = code_without_plus.substring(with: prefix_start..<suffix_start)
+        let code_suffix = code_without_plus.substring(with: suffix_start..<code_without_plus.endIndex)
+        // Decode the first 10 or fewer
+        var prefixArea = decodePairs(code_prefix)
+        if (code_suffix.isEmpty) {
+            return prefixArea
+        }
+        // Decode the extra characters
+        let gridArea = decodeGrid(code_suffix)
+        /*
+         * This narrows the space from the low point to the grid's refinement region
+         * There is a chance the actual original encoded point was between the center and the high,
+         * but I'm not sure how much that matters after the 10 character prefix
+        */
+        return CodeArea(latitudeLow: prefixArea.latitudeLow + gridArea.latitudeLow,
+                        longitudeLow: prefixArea.longitudeLow + gridArea.longitudeLow,
+                        latitudeHigh: prefixArea.latitudeLow + gridArea.latitudeHigh,
+                        longitudeHigh: prefixArea.longitudeLow + gridArea.longitudeHigh,
+                        codeLength: prefixArea.codeLength + gridArea.codeLength)
+    }
+    
+    /*
+     * Actually,
+     */
+    private static func decodePairs(_ codePrefix: String) -> CodeArea {
+        let latArray = codePrefix.characters.enumerated().filter{ $0.offset % 2 == 0 }
+        let lngArray = codePrefix.characters.enumerated().filter{ $0.offset % 2 == 1 }
+        let latRange: (low: Float64, high: Float64) = decodeSequence(codePart: latArray)
+        let lngRange: (low: Float64, high: Float64) = decodeSequence(codePart: lngArray)
+        return CodeArea(latitudeLow: latRange.low - LATITUDE_MAX,
+                        longitudeLow: lngRange.low - LONGITUDE_MAX,
+                        latitudeHigh: latRange.high - LATITUDE_MAX,
+                        longitudeHigh: lngRange.high - LONGITUDE_MAX,
+                        codeLength: latArray.count + lngArray.count)
+    }
+    
+    // Takes a sequence of the Latitude or Longitude array (the string that was enumerated string and decomposed)
+    private static func decodeSequence(codePart: [(offset: Int, element: Character)]) -> (low: Float64, high: Float64) {
+        var value: Float64 = 0.0
+        var i = 0
+        while (i < codePart.count) {
+            value += Float64(CODE_ALPHABET.index(of: codePart[i].element)!) * RESOLUTION_STEPS[i]
+            i += 1
+        }
+        return (low: value, high: value + RESOLUTION_STEPS[i - 1])
+    }
+    
+    private static func decodeGrid(_ codeSuffix: String) -> CodeArea {
+        var latitudeLow: Float64 = 0.0
+        var longitudeLow: Float64 = 0.0
+        var latPlaceMultiplier = RESOLUTION_STEPS.last!
+        var lngPlaceMultiplier = RESOLUTION_STEPS.last!
+        let codeSuffixChars = codeSuffix.characters
+        for char in codeSuffixChars {
+            let rc = MATRIX_FOR_PLUS.indices(of: char)!
+            // it must be found, so it can be unwrapped
+            latPlaceMultiplier /= MATRIX_FOR_PLUS_DIM.rows
+            lngPlaceMultiplier /= MATRIX_FOR_PLUS_DIM.cols
+            latitudeLow += rc.row * latPlaceMultiplier
+            longitudeLow += rc.col * lngPlaceMultiplier
+        }
+        return CodeArea(latitudeLow: latitudeLow, longitudeLow: longitudeLow, latitudeHigh: latitudeLow + latPlaceMultiplier, longitudeHigh: longitudeLow + lngPlaceMultiplier, codeLength: codeSuffixChars.count)
+    }
+}
+
+// https://stackoverflow.com/questions/37314322/how-to-find-the-index-of-an-item-in-a-multidimensional-array-swiftily
+// Martin R.'s very elegant optional pair return
+extension Array where Element : Collection, Element.Iterator.Element : Equatable, Element.Index == Int {
+    func indices(of x: Element.Iterator.Element) -> (row: Float64, col: Float64)? {
+        for (i, row) in self.enumerated() {
+            if let j = row.index(of: x) {
+                return (row: Float64(i), col: Float64(j))
+            }
+        }
+        return nil
+    }
+}
