@@ -1,5 +1,6 @@
 # OpenLocationCode-swift
 Open location code framework for swift
+For original code, see @google [Google's code](https://github.com/google/open-location-code)
 
 **Make sure you follow all of the general installation procedures for CocoaPods**
 
