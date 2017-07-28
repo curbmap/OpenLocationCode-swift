@@ -310,7 +310,7 @@ public class OpenLocationCode {
         let code_prefix = code_without_plus.substring(with: prefix_start..<suffix_start)
         let code_suffix = code_without_plus.substring(with: suffix_start..<code_without_plus.endIndex)
         // Decode the first 10 or fewer
-        var prefixArea = decodePairs(code_prefix)
+        let prefixArea = decodePairs(code_prefix)
         if (code_suffix.isEmpty) {
             return prefixArea
         }

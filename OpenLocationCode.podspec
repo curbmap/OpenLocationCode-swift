@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "OpenLocationCode"
   s.version      = "0.0.1"
-  s.summary      = "Open Location Codes are an encoding for latitude and longitude created by Google. The static functions encode and decode of this framework can be used to convert."
+  s.summary      = "Google's Open Location Code spec implemented in Swift 3."
 
   s.description  = <<-DESC
   OpenLocationCode-swift is an implementation according to the code released by Google on their github repository for
@@ -27,14 +27,16 @@ Pod::Spec.new do |s|
   or https://github.com/google/open-location-code
                    DESC
 
-  s.homepage     = "https://https://github.com/curbmap/OpenLocationCode-swift"
+  s.homepage     = "https://github.com/curbmap/OpenLocationCode-swift"
 
-  s.license      = "Apache License, Version 2.0"
+  s.license      = { :type => 'Apache'}
 
   s.author             = { "Eli Selkin" => "ejselkin@cpp.edu" }
   s.source       = { :git => "https://github.com/curbmap/OpenLocationCode-swift.git", :tag => "#{s.version}" }
   s.source_files  = "OpenLocationCode", "OpenLocationCodes/**/*.{h,m,swift}"
-  
+  s.ios.framework  = 'UIKit'
+  s.platform      = :ios, '9.0'
+  s.ios.deployment_target  = '9.0'
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
   #  If your library depends on compiler flags you can set them in the xcconfig hash
@@ -42,5 +44,4 @@ Pod::Spec.new do |s|
   #  you can include multiple dependencies to ensure it works.
 
   s.pod_target_xcconfig = { 'SWIFT_VERSION' => '3' }
-
 end
