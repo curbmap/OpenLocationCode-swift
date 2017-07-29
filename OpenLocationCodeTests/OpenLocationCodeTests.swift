@@ -68,6 +68,14 @@ class OpenLocationCodeTests: XCTestCase {
         }
     }
     
+    func testBoundingBox() {
+        let a = "85634W34+CM"
+        let b = "85634W34+CR"
+        let c = try? OpenLocationCode.smallestBoundingBox(a, b)
+        assert(c != nil)
+        print((c??.getCode())!)
+    }
+    
     func testPerformanceExample() {
         // See how long it takes to make a 1000 encoding and decodings (that's what this does behind the scenes)... the most complex of initializers with high resolution
         self.measure {

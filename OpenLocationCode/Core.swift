@@ -311,12 +311,20 @@ public class OpenLocationCode {
             throw OpenLocationCodeError.decodingError
         }
         
-        let code_without_plus = String(code.uppercased().characters.filter{ CODE_ALPHABET.contains($0) })
+        let code_without_plus_array = code.uppercased().characters.filter{ CODE_ALPHABET.contains($0) }
+        let code_without_plus = String(code_without_plus_array)
         // Separate the first 10 from the rest
         let prefix_start = code_without_plus.startIndex
-        let suffix_start = code_without_plus.index(prefix_start, offsetBy: 10)
-        let code_prefix = code_without_plus.substring(with: prefix_start..<suffix_start)
-        let code_suffix = code_without_plus.substring(with: suffix_start..<code_without_plus.endIndex)
+        let suffix_start: String.Index
+        var code_prefix = ""
+        var code_suffix = ""
+        if (code_without_plus_array.count >= 10) {
+            suffix_start = code_without_plus.index(prefix_start, offsetBy: 10)
+            code_prefix = code_without_plus.substring(with: prefix_start..<suffix_start)
+            code_suffix = code_without_plus.substring(with: suffix_start..<code_without_plus.endIndex)
+        } else {
+            code_prefix = code_without_plus.substring(with: prefix_start..<code_without_plus.endIndex)
+        }
         // Decode the first 10 or fewer
         let prefixArea = decodePairs(code_prefix)
         if (code_suffix.isEmpty) {
@@ -384,6 +392,40 @@ public class OpenLocationCode {
             longitudeLow += rc.col * lngPlaceMultiplier
         }
         return CodeArea(latitudeLow: latitudeLow, longitudeLow: longitudeLow, latitudeHigh: latitudeLow + latPlaceMultiplier, longitudeHigh: longitudeLow + lngPlaceMultiplier, codeLength: codeSuffixChars.count)
+    }
+    
+    public static func smallestBoundingBox(_ code_a: String, _ code_b: String) throws -> OpenLocationCode? {
+        let a_valid = isValidOLC(code: code_a)
+        let b_valid = isValidOLC(code: code_b)
+        if (a_valid != 1 || b_valid != 1) {
+            throw OpenLocationCodeError.invalidCode
+        }
+        let code_a_chars = code_a.characters
+        let code_b_chars = code_b.characters
+        var similar = 0
+        for i in 0..<code_a_chars.count {
+            if (i >= code_b_chars.count - 1) {
+                break
+            }
+            if code_a_chars[code_a_chars.index(code_a_chars.startIndex, offsetBy: i)] != code_b_chars[code_b_chars.index(code_b_chars.startIndex, offsetBy: i)] {
+                break
+            }
+            similar += 1
+        }
+        if (similar == 10) {
+            // Since these codes were long codes and if we kept the 9th but not the 10th non SEPARATOR character
+            // Remove one more, because they are still in pairs
+            similar -= 1
+        }
+        var substring = code_a.substring(to: code_a.index(code_a.startIndex, offsetBy: similar))
+        if (similar < LENGTH_BASE) {
+            let padding = (LENGTH_BASE - similar)
+            for i in 0..<padding {
+                substring += String(PADDING_CHARACTER)
+            }
+            substring += String(PLUS_SEPARATOR)
+        }
+        return try? OpenLocationCode(substring)
     }
 }
 
