@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "OpenLocationCode"
-  s.version      = "0.0.3"
+  s.version      = "0.0.3.1"
   s.summary      = "Google's Open Location Code spec implemented in Swift 3."
 
   s.description  = <<-DESC
@@ -36,9 +36,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/curbmap/OpenLocationCode-swift.git", :tag => "#{s.version}" }
   s.source_files  = "OpenLocationCode", "OpenLocationCodes/**/*.{h,m,swift}"
   s.ios.framework  = 'UIKit'
-  s.osx.framework = 'AppKit'
   s.ios.deployment_target  = '9.0'
-  s.osx.deployment_target = '10.9'
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
   #  If your library depends on compiler flags you can set them in the xcconfig hash
