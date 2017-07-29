@@ -20,10 +20,11 @@ Pod::Spec.new do |s|
   s.summary      = "Google's Open Location Code spec implemented in Swift 3."
 
   s.description  = <<-DESC
-  OpenLocationCode-swift is an implementation according to the code released by Google on their github repository for
-  Open Location Codes (Plus Codes). Open Location Codes are generally 10 characters, but can be shorter (short codes)
-  or longer (a full code with extra characters specifying grid-based reductions in the dimensions of a coded region).
-  For more information about Google's Open Location Codes, see http://openlocationcode.com or https://en.wikipedia.org/wiki/Open_Location_Code
+  OpenLocationCode-swift is an implementation similar to the code released by Google on their github repository for
+  Open Location Codes (Plus Codes). Open Location Codes are generally 10 characters, but can be shorter (short codes,
+  usually pinned to some nearby location that has a known prefix code) or longer (a full code with extra characters
+  specifying grid-based reductions in the dimensions of a coded region). For more information about Google's Open
+  Location Codes, see http://openlocationcode.com or https://en.wikipedia.org/wiki/Open_Location_Code
   or https://github.com/google/open-location-code
                    DESC
 
@@ -35,8 +36,9 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/curbmap/OpenLocationCode-swift.git", :tag => "#{s.version}" }
   s.source_files  = "OpenLocationCode", "OpenLocationCodes/**/*.{h,m,swift}"
   s.ios.framework  = 'UIKit'
-  s.platform      = :ios, '9.0'
+  s.osx.framework = 'AppKit'
   s.ios.deployment_target  = '9.0'
+  s.osx.deployment_target = '10.9'
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
   #  If your library depends on compiler flags you can set them in the xcconfig hash

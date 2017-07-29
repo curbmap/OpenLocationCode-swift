@@ -6,7 +6,11 @@
 //  Copyright © 2017 curbmap. All rights reserved.
 //
 
+#ifdef TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#else 
+#import <Foundation/Foundation.h>
+#endif
 
 //! Project version number for OpenLocationCode.
 FOUNDATION_EXPORT double OpenLocationCodeVersionNumber;
