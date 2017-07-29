@@ -16,6 +16,7 @@ enum OpenLocationCodeError:Error {
     case invalidLongCode
     case encodingError
     case decodingError
+    case dissimilarRegions
 }
 
 // Future version may switch from Float64 to NSDecimalNumber to handle more places of precision
@@ -416,6 +417,9 @@ public class OpenLocationCode {
             // Since these codes were long codes and if we kept the 9th but not the 10th non SEPARATOR character
             // Remove one more, because they are still in pairs
             similar -= 1
+        }
+        if (similar <= 1) {
+            throw OpenLocationCodeError.dissimilarRegions
         }
         var substring = code_a.substring(to: code_a.index(code_a.startIndex, offsetBy: similar))
         if (similar < LENGTH_BASE) {
