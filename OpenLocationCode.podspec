@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "OpenLocationCode"
-  s.version      = "0.0.3.4"
+  s.version      = "0.0.4"
   s.summary      = "Google's Open Location Code spec implemented in Swift 3."
 
   s.description  = <<-DESC
