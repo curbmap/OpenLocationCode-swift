@@ -420,7 +420,7 @@ public class OpenLocationCode {
         var substring = code_a.substring(to: code_a.index(code_a.startIndex, offsetBy: similar))
         if (similar < LENGTH_BASE) {
             let padding = (LENGTH_BASE - similar)
-            for i in 0..<padding {
+            for _ in 0..<padding {
                 substring += String(PADDING_CHARACTER)
             }
             substring += String(PLUS_SEPARATOR)
