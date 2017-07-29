@@ -401,35 +401,40 @@ public class OpenLocationCode {
         if (a_valid != 1 || b_valid != 1) {
             throw OpenLocationCodeError.invalidCode
         }
-        let code_a_chars = code_a.characters
-        let code_b_chars = code_b.characters
+        let code_a_chars = code_a.characters.filter { CODE_ALPHABET.contains($0) }
+        let code_b_chars = code_b.characters.filter { CODE_ALPHABET.contains($0) }
         var similar = 0
         for i in 0..<code_a_chars.count {
-            if (i >= code_b_chars.count - 1) {
+            if (i >= code_b_chars.count) {
                 break
             }
-            if code_a_chars[code_a_chars.index(code_a_chars.startIndex, offsetBy: i)] != code_b_chars[code_b_chars.index(code_b_chars.startIndex, offsetBy: i)] {
+            if code_a_chars[i] != code_b_chars[i] {
+                print(code_a_chars[i])
+                print(code_b_chars[i])
                 break
             }
             similar += 1
         }
-        if (similar == 10) {
-            // Since these codes were long codes and if we kept the 9th but not the 10th non SEPARATOR character
-            // Remove one more, because they are still in pairs
-            similar -= 1
-        }
         if (similar <= 1) {
             throw OpenLocationCodeError.dissimilarRegions
         }
-        var substring = code_a.substring(to: code_a.index(code_a.startIndex, offsetBy: similar))
-        if (similar < LENGTH_BASE) {
-            let padding = (LENGTH_BASE - similar)
-            for _ in 0..<padding {
-                substring += String(PADDING_CHARACTER)
-            }
-            substring += String(PLUS_SEPARATOR)
+        print(similar)
+        if (similar <= 9 && similar % 2 == 1) {
+            // Remove one more, because they are still in pairs
+            similar -= 1
         }
-        return try? OpenLocationCode(substring)
+        var new_chars = code_a_chars.prefix(upTo: similar)
+        while new_chars.count < LENGTH_BASE {
+            new_chars.append(PADDING_CHARACTER)
+        }
+        if (new_chars.count == LENGTH_BASE) {
+            new_chars.append(PLUS_SEPARATOR)
+        } else if (new_chars.count > LENGTH_BASE) {
+            // reinsert +
+            new_chars.insert(PLUS_SEPARATOR, at: LENGTH_BASE+1)
+        }
+        print(String(new_chars))
+        return try? OpenLocationCode(String(new_chars))
     }
 }
 

@@ -69,8 +69,8 @@ class OpenLocationCodeTests: XCTestCase {
     }
     
     func testBoundingBox() {
-        let a = "85634W34+CM"
-        let b = "85634W34+CR"
+        let a = "85634WR4+CM"
+        let b = "85634W00+"
         let c = try? OpenLocationCode.smallestBoundingBox(a, b)
         assert(c != nil)
         print((c??.getCode())!)
