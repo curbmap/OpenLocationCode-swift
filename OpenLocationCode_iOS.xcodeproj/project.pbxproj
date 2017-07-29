@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D56E17691F2A974000072EC5 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D56E17681F2A974000072EC5 /* LICENSE */; };
-		D56E176B1F2AC3DD00072EC5 /* CodeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */; };
 		D5A3C53A1F283B50001C10B8 /* OpenLocationCode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5A3C5301F283B50001C10B8 /* OpenLocationCode.framework */; };
-		D5A3C53F1F283B50001C10B8 /* OpenLocationCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C53E1F283B50001C10B8 /* OpenLocationCodeTests.swift */; };
-		D5A3C5411F283B50001C10B8 /* OpenLocationCode.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D5A3C54B1F283DC4001C10B8 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C54A1F283DC4001C10B8 /* Core.swift */; };
+		D5B2B85B1F2C568D00D62670 /* OpenLocationCode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B2B8521F2C568C00D62670 /* OpenLocationCode.framework */; };
+		D5B2B8741F2C587900D62670 /* OpenLocationCode.h in Headers */ = {isa = PBXBuildFile; fileRef = D5B2B8701F2C57A300D62670 /* OpenLocationCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D5B2B8751F2C587A00D62670 /* OpenLocationCode.h in Headers */ = {isa = PBXBuildFile; fileRef = D5B2B8701F2C57A300D62670 /* OpenLocationCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D5B2B8761F2C589200D62670 /* OpenLocationCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B8731F2C581A00D62670 /* OpenLocationCodeTests.swift */; };
+		D5B2B8771F2C589300D62670 /* OpenLocationCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B8731F2C581A00D62670 /* OpenLocationCodeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,18 +23,27 @@
 			remoteGlobalIDString = D5A3C52F1F283B50001C10B8;
 			remoteInfo = OpenLocationCode;
 		};
+		D5B2B85C1F2C568D00D62670 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5A3C5271F283B50001C10B8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D5B2B8511F2C568C00D62670;
+			remoteInfo = OpenLocationCode_Mac;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D56E17681F2A974000072EC5 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeArea.swift; sourceTree = "<group>"; };
 		D5A3C5301F283B50001C10B8 /* OpenLocationCode.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenLocationCode.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenLocationCode.h; sourceTree = "<group>"; };
-		D5A3C5341F283B50001C10B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5A3C5391F283B50001C10B8 /* OpenLocationCodeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenLocationCodeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D5A3C53E1F283B50001C10B8 /* OpenLocationCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLocationCodeTests.swift; sourceTree = "<group>"; };
-		D5A3C5401F283B50001C10B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D5A3C54A1F283DC4001C10B8 /* Core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
+		D5B2B8521F2C568C00D62670 /* OpenLocationCode.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenLocationCode.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5B2B85A1F2C568D00D62670 /* OpenLocationCode_MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenLocationCode_MacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5B2B86C1F2C57A300D62670 /* CodeArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeArea.swift; sourceTree = "<group>"; };
+		D5B2B86D1F2C57A300D62670 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
+		D5B2B86E1F2C57A300D62670 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D5B2B86F1F2C57A300D62670 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D5B2B8701F2C57A300D62670 /* OpenLocationCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenLocationCode.h; sourceTree = "<group>"; };
+		D5B2B8721F2C581A00D62670 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D5B2B8731F2C581A00D62670 /* OpenLocationCodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenLocationCodeTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,14 +62,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D5B2B84E1F2C568C00D62670 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5B2B8571F2C568D00D62670 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5B2B85B1F2C568D00D62670 /* OpenLocationCode.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		D5A3C5261F283B50001C10B8 = {
 			isa = PBXGroup;
 			children = (
-				D5A3C5321F283B50001C10B8 /* OpenLocationCode */,
-				D5A3C53D1F283B50001C10B8 /* OpenLocationCodeTests */,
+				D5B2B86B1F2C57A300D62670 /* OpenLocationCodeCommon */,
+				D5B2B8711F2C581A00D62670 /* OpenLocationCodeCommonTests */,
 				D5A3C5311F283B50001C10B8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,29 +94,31 @@
 			children = (
 				D5A3C5301F283B50001C10B8 /* OpenLocationCode.framework */,
 				D5A3C5391F283B50001C10B8 /* OpenLocationCodeTests.xctest */,
+				D5B2B8521F2C568C00D62670 /* OpenLocationCode.framework */,
+				D5B2B85A1F2C568D00D62670 /* OpenLocationCode_MacTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D5A3C5321F283B50001C10B8 /* OpenLocationCode */ = {
+		D5B2B86B1F2C57A300D62670 /* OpenLocationCodeCommon */ = {
 			isa = PBXGroup;
 			children = (
-				D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */,
-				D5A3C5341F283B50001C10B8 /* Info.plist */,
-				D5A3C54A1F283DC4001C10B8 /* Core.swift */,
-				D56E17681F2A974000072EC5 /* LICENSE */,
-				D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */,
+				D5B2B86C1F2C57A300D62670 /* CodeArea.swift */,
+				D5B2B86D1F2C57A300D62670 /* Core.swift */,
+				D5B2B86E1F2C57A300D62670 /* Info.plist */,
+				D5B2B86F1F2C57A300D62670 /* LICENSE */,
+				D5B2B8701F2C57A300D62670 /* OpenLocationCode.h */,
 			);
-			path = OpenLocationCode;
+			path = OpenLocationCodeCommon;
 			sourceTree = "<group>";
 		};
-		D5A3C53D1F283B50001C10B8 /* OpenLocationCodeTests */ = {
+		D5B2B8711F2C581A00D62670 /* OpenLocationCodeCommonTests */ = {
 			isa = PBXGroup;
 			children = (
-				D5A3C53E1F283B50001C10B8 /* OpenLocationCodeTests.swift */,
-				D5A3C5401F283B50001C10B8 /* Info.plist */,
+				D5B2B8721F2C581A00D62670 /* Info.plist */,
+				D5B2B8731F2C581A00D62670 /* OpenLocationCodeTests.swift */,
 			);
-			path = OpenLocationCodeTests;
+			path = OpenLocationCodeCommonTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -102,7 +128,15 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5A3C5411F283B50001C10B8 /* OpenLocationCode.h in Headers */,
+				D5B2B8741F2C587900D62670 /* OpenLocationCode.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5B2B84F1F2C568C00D62670 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5B2B8751F2C587A00D62670 /* OpenLocationCode.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +179,42 @@
 			productReference = D5A3C5391F283B50001C10B8 /* OpenLocationCodeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		D5B2B8511F2C568C00D62670 /* OpenLocationCode_Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D5B2B8671F2C568D00D62670 /* Build configuration list for PBXNativeTarget "OpenLocationCode_Mac" */;
+			buildPhases = (
+				D5B2B84D1F2C568C00D62670 /* Sources */,
+				D5B2B84E1F2C568C00D62670 /* Frameworks */,
+				D5B2B84F1F2C568C00D62670 /* Headers */,
+				D5B2B8501F2C568C00D62670 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OpenLocationCode_Mac;
+			productName = OpenLocationCode_Mac;
+			productReference = D5B2B8521F2C568C00D62670 /* OpenLocationCode.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D5B2B8591F2C568D00D62670 /* OpenLocationCode_MacTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D5B2B8681F2C568D00D62670 /* Build configuration list for PBXNativeTarget "OpenLocationCode_MacTests" */;
+			buildPhases = (
+				D5B2B8561F2C568D00D62670 /* Sources */,
+				D5B2B8571F2C568D00D62670 /* Frameworks */,
+				D5B2B8581F2C568D00D62670 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D5B2B85D1F2C568D00D62670 /* PBXTargetDependency */,
+			);
+			name = OpenLocationCode_MacTests;
+			productName = OpenLocationCode_MacTests;
+			productReference = D5B2B85A1F2C568D00D62670 /* OpenLocationCode_MacTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -166,9 +236,19 @@
 						DevelopmentTeam = CNKFCAS44G;
 						ProvisioningStyle = Automatic;
 					};
+					D5B2B8511F2C568C00D62670 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = CNKFCAS44G;
+						ProvisioningStyle = Automatic;
+					};
+					D5B2B8591F2C568D00D62670 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = CNKFCAS44G;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
-			buildConfigurationList = D5A3C52A1F283B50001C10B8 /* Build configuration list for PBXProject "OpenLocationCode" */;
+			buildConfigurationList = D5A3C52A1F283B50001C10B8 /* Build configuration list for PBXProject "OpenLocationCode_iOS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -182,6 +262,8 @@
 			targets = (
 				D5A3C52F1F283B50001C10B8 /* OpenLocationCode */,
 				D5A3C5381F283B50001C10B8 /* OpenLocationCodeTests */,
+				D5B2B8511F2C568C00D62670 /* OpenLocationCode_Mac */,
+				D5B2B8591F2C568D00D62670 /* OpenLocationCode_MacTests */,
 			);
 		};
 /* End PBXProject section */
@@ -191,11 +273,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D56E17691F2A974000072EC5 /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D5A3C5371F283B50001C10B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5B2B8501F2C568C00D62670 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5B2B8581F2C568D00D62670 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -209,8 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5A3C54B1F283DC4001C10B8 /* Core.swift in Sources */,
-				D56E176B1F2AC3DD00072EC5 /* CodeArea.swift in Sources */,
+				D5B2B8761F2C589200D62670 /* OpenLocationCodeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +312,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5A3C53F1F283B50001C10B8 /* OpenLocationCodeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5B2B84D1F2C568C00D62670 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5B2B8771F2C589300D62670 /* OpenLocationCodeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5B2B8561F2C568D00D62670 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +337,11 @@
 			isa = PBXTargetDependency;
 			target = D5A3C52F1F283B50001C10B8 /* OpenLocationCode */;
 			targetProxy = D5A3C53B1F283B50001C10B8 /* PBXContainerItemProxy */;
+		};
+		D5B2B85D1F2C568D00D62670 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D5B2B8511F2C568C00D62670 /* OpenLocationCode_Mac */;
+			targetProxy = D5B2B85C1F2C568D00D62670 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -348,7 +461,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.curbmap.OpenLocationCode;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = OpenLocationCode;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -369,7 +482,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.curbmap.OpenLocationCode;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = OpenLocationCode;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
 			};
@@ -401,10 +514,90 @@
 			};
 			name = Release;
 		};
+		D5B2B8631F2C568D00D62670 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = CNKFCAS44G;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = OpenLocationCode_Mac/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.curbmap.OpenLocationCode-Mac";
+				PRODUCT_NAME = OpenLocationCode;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		D5B2B8641F2C568D00D62670 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = CNKFCAS44G;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = OpenLocationCode_Mac/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.curbmap.OpenLocationCode-Mac";
+				PRODUCT_NAME = OpenLocationCode;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		D5B2B8651F2C568D00D62670 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = CNKFCAS44G;
+				INFOPLIST_FILE = OpenLocationCode_MacTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.curbmap.OpenLocationCode-MacTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		D5B2B8661F2C568D00D62670 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = CNKFCAS44G;
+				INFOPLIST_FILE = OpenLocationCode_MacTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.curbmap.OpenLocationCode-MacTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D5A3C52A1F283B50001C10B8 /* Build configuration list for PBXProject "OpenLocationCode" */ = {
+		D5A3C52A1F283B50001C10B8 /* Build configuration list for PBXProject "OpenLocationCode_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D5A3C5421F283B50001C10B8 /* Debug */,
@@ -427,6 +620,24 @@
 			buildConfigurations = (
 				D5A3C5481F283B50001C10B8 /* Debug */,
 				D5A3C5491F283B50001C10B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D5B2B8671F2C568D00D62670 /* Build configuration list for PBXNativeTarget "OpenLocationCode_Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5B2B8631F2C568D00D62670 /* Debug */,
+				D5B2B8641F2C568D00D62670 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D5B2B8681F2C568D00D62670 /* Build configuration list for PBXNativeTarget "OpenLocationCode_MacTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5B2B8651F2C568D00D62670 /* Debug */,
+				D5B2B8661F2C568D00D62670 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
