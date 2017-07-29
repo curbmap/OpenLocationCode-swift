@@ -34,7 +34,7 @@ Pod::Spec.new do |s|
 
   s.author             = { "Eli Selkin" => "ejselkin@cpp.edu" }
   s.source       = { :git => "https://github.com/curbmap/OpenLocationCode-swift.git", :tag => "#{s.version}" }
-  s.source_files  = "OpenLocationCode", "OpenLocationCodesCommon/**/*.{h,m,swift}"
+  s.source_files  = "OpenLocationCodeCommon", "OpenLocationCodeCommon/**/*.{h,m,swift}"
   s.ios.framework  = 'UIKit'
   s.osx.framework = 'AppKit'
   s.ios.deployment_target  = '9.0'

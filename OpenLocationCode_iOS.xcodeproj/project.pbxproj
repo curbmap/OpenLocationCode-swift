@@ -13,6 +13,10 @@
 		D5B2B8751F2C587A00D62670 /* OpenLocationCode.h in Headers */ = {isa = PBXBuildFile; fileRef = D5B2B8701F2C57A300D62670 /* OpenLocationCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5B2B8761F2C589200D62670 /* OpenLocationCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B8731F2C581A00D62670 /* OpenLocationCodeTests.swift */; };
 		D5B2B8771F2C589300D62670 /* OpenLocationCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B8731F2C581A00D62670 /* OpenLocationCodeTests.swift */; };
+		D5B2B8781F2C5AD300D62670 /* CodeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B86C1F2C57A300D62670 /* CodeArea.swift */; };
+		D5B2B8791F2C5AD400D62670 /* CodeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B86C1F2C57A300D62670 /* CodeArea.swift */; };
+		D5B2B87A1F2C5ADC00D62670 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B86D1F2C57A300D62670 /* Core.swift */; };
+		D5B2B87B1F2C5ADD00D62670 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5B2B86D1F2C57A300D62670 /* Core.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -304,7 +308,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5B2B87A1F2C5ADC00D62670 /* Core.swift in Sources */,
 				D5B2B8761F2C589200D62670 /* OpenLocationCodeTests.swift in Sources */,
+				D5B2B8781F2C5AD300D62670 /* CodeArea.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,7 +325,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5B2B87B1F2C5ADD00D62670 /* Core.swift in Sources */,
 				D5B2B8771F2C589300D62670 /* OpenLocationCodeTests.swift in Sources */,
+				D5B2B8791F2C5AD400D62670 /* CodeArea.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,10 +465,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = OpenLocationCode/Info.plist;
+				INFOPLIST_FILE = OpenLocationCodeCommon/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curbmap.OpenLocationCode;
+				PRODUCT_BUNDLE_IDENTIFIER = OpenLocationCode;
 				PRODUCT_NAME = OpenLocationCode;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -478,10 +486,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = OpenLocationCode/Info.plist;
+				INFOPLIST_FILE = OpenLocationCodeCommon/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.curbmap.OpenLocationCode;
+				PRODUCT_BUNDLE_IDENTIFIER = OpenLocationCode;
 				PRODUCT_NAME = OpenLocationCode;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -525,11 +533,11 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = OpenLocationCode_Mac/Info.plist;
+				INFOPLIST_FILE = OpenLocationCodeCommon/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.curbmap.OpenLocationCode-Mac";
+				PRODUCT_BUNDLE_IDENTIFIER = OpenLocationCode;
 				PRODUCT_NAME = OpenLocationCode;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -548,11 +556,11 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = OpenLocationCode_Mac/Info.plist;
+				INFOPLIST_FILE = OpenLocationCodeCommon/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.curbmap.OpenLocationCode-Mac";
+				PRODUCT_BUNDLE_IDENTIFIER = OpenLocationCode;
 				PRODUCT_NAME = OpenLocationCode;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
