@@ -16,13 +16,13 @@ import Foundation
  * You'll get a larger CodeArea for a shorter code.
  */
 public struct CodeArea {
-    let latitudeLow: Float64;
-    let longitudeLow: Float64;
-    let latitudeHigh: Float64;
-    let longitudeHigh: Float64;
+    public let latitudeLow: Float64;
+    public let longitudeLow: Float64;
+    public let latitudeHigh: Float64;
+    public let longitudeHigh: Float64;
     let latitudeCenter: Float64;
     let longitudeCenter: Float64;
-    let codeLength: Int;
+    public let codeLength: Int;
     init(latitudeLow: Float64, longitudeLow: Float64, latitudeHigh: Float64, longitudeHigh: Float64, codeLength: Int) {
         self.latitudeLow = latitudeLow
         self.longitudeLow = longitudeLow
