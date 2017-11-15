@@ -41,7 +41,7 @@ class OpenLocationCodeTests: XCTestCase {
         let z: OpenLocationCode? = try? OpenLocationCode(latitude: 90, longitude: 1, codeLength: 10)
         assert(z != nil)
         assert(z?.getCode() == "CFX3X2X2+X2")
-        let a: OpenLocationCode? = try? OpenLocationCode(latitude: 1, longitude: 1 codeLength: 11)
+        let a: OpenLocationCode? = try? OpenLocationCode(latitude: 1, longitude: 1, codeLength: 11)
         assert(a != nil)
         assert(a?.getCode() == "6FH32222+222")
     }

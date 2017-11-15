@@ -289,8 +289,8 @@ public class OpenLocationCode {
         var latPlaceMultiplier = RESOLUTION_STEPS.last!
         var lngPlaceMultiplier = RESOLUTION_STEPS.last!
         // Adjust to positive range.
-        var adjustedLatitude += LATITUDE_MAX
-        var adjustedLongitude += LONGITUDE_MAX
+        var adjustedLatitude = latitude + LATITUDE_MAX
+        var adjustedLongitude = longitude + LONGITUDE_MAX
         // To avoid problems with floating point, get rid of the degrees.
         adjustedLatitude = adjustedLatitude.truncatingRemainder(dividingBy: 1.0)
         adjustedLongitude = adjustedLongitude.truncatingRemainder(dividingBy: 1.0)
