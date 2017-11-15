@@ -84,13 +84,12 @@ public class OpenLocationCode {
         if (code == "") {
             return -1
         }
-        let code_array = code.characters
         var pos = 0
         var separators = 0
         var separator_position = -1
         var paddingPos = -1
         var paddingEnd = -1
-        for letter in code_array {
+        for letter in code {
             let checkedLetter = OpenLocationCode.CODE_ALPHABET.index(of: letter)
             // Verifies all characters come from the alphabet or +, 0
             if (letter != OpenLocationCode.PADDING_CHARACTER && letter != OpenLocationCode.PLUS_SEPARATOR && checkedLetter == nil) {
@@ -128,9 +127,9 @@ public class OpenLocationCode {
         if (separators != 1 || separator_position > OpenLocationCode.LENGTH_BASE || separator_position % 2 == 1) {
             return -1
         }
-        if (isValidShortOLC(code: code_array, separator_pos: separator_position)) {
+        if (isValidShortOLC(code: code, separator_pos: separator_position)) {
             return 0
-        } else if (isValidLongOLC(code: code_array, separator_pos: separator_position)) {
+        } else if (isValidLongOLC(code: code, separator_pos: separator_position)) {
             return 1
         }
         return -1
@@ -141,7 +140,7 @@ public class OpenLocationCode {
      * Short codes should be 4 characters, a +, followed by 0 or more characters.
      * Generally, these codes are 4-7 characters long, not including the +
      */
-    public static func isValidShortOLC(code: String.CharacterView, separator_pos: Int) -> Bool {
+    public static func isValidShortOLC(code: String, separator_pos: Int) -> Bool {
         if (separator_pos >= 0 && separator_pos < OpenLocationCode.LENGTH_BASE) {
             return true
         }
@@ -156,7 +155,7 @@ public class OpenLocationCode {
      
      * Here we check the bounds of the code to make sure it's within
      */
-    public static func isValidLongOLC(code: String.CharacterView, separator_pos: Int) -> Bool {
+    public static func isValidLongOLC(code: String, separator_pos: Int) -> Bool {
         // If it's a short code, it's not a long code... See google python implementation
         if (OpenLocationCode.isValidShortOLC(code: code, separator_pos: separator_pos)) {
             return false
@@ -318,7 +317,7 @@ public class OpenLocationCode {
             throw OpenLocationCodeError.decodingError
         }
         
-        let code_without_plus_array = code.uppercased().characters.filter{ CODE_ALPHABET.contains($0) }
+        let code_without_plus_array = code.uppercased().filter{ CODE_ALPHABET.contains($0) }
         let code_without_plus = String(code_without_plus_array)
         // Separate the first 10 from the rest
         let prefix_start = code_without_plus.startIndex
@@ -357,8 +356,8 @@ public class OpenLocationCode {
      * equal length (max 5 each).
      */
     private static func decodePairs(_ codePrefix: String) -> CodeArea {
-        let latArray = codePrefix.characters.enumerated().filter{ $0.offset % 2 == 0 }
-        let lngArray = codePrefix.characters.enumerated().filter{ $0.offset % 2 == 1 }
+        let latArray = codePrefix.enumerated().filter{ $0.offset % 2 == 0 }
+        let lngArray = codePrefix.enumerated().filter{ $0.offset % 2 == 1 }
         let latRange: (low: Float64, high: Float64) = decodeSequence(codePart: latArray)
         let lngRange: (low: Float64, high: Float64) = decodeSequence(codePart: lngArray)
         return CodeArea(latitudeLow: latRange.low - LATITUDE_MAX,
@@ -389,8 +388,7 @@ public class OpenLocationCode {
         var longitudeLow: Float64 = 0.0
         var latPlaceMultiplier = RESOLUTION_STEPS.last!
         var lngPlaceMultiplier = RESOLUTION_STEPS.last!
-        let codeSuffixChars = codeSuffix.characters
-        for char in codeSuffixChars {
+        for char in codeSuffix {
             let rc = MATRIX_FOR_PLUS.indices(of: char)!
             // it must be found, so it can be unwrapped
             latPlaceMultiplier /= MATRIX_FOR_PLUS_DIM.rows
@@ -398,7 +396,7 @@ public class OpenLocationCode {
             latitudeLow += rc.row * latPlaceMultiplier
             longitudeLow += rc.col * lngPlaceMultiplier
         }
-        return CodeArea(latitudeLow: latitudeLow, longitudeLow: longitudeLow, latitudeHigh: latitudeLow + latPlaceMultiplier, longitudeHigh: longitudeLow + lngPlaceMultiplier, codeLength: codeSuffixChars.count)
+        return CodeArea(latitudeLow: latitudeLow, longitudeLow: longitudeLow, latitudeHigh: latitudeLow + latPlaceMultiplier, longitudeHigh: longitudeLow + lngPlaceMultiplier, codeLength: codeSuffix.count)
     }
     
     public static func smallestBoundingBox(_ code_a: String, _ code_b: String) throws -> OpenLocationCode? {
@@ -407,8 +405,8 @@ public class OpenLocationCode {
         if (a_valid != 1 || b_valid != 1) {
             throw OpenLocationCodeError.invalidCode
         }
-        let code_a_chars = code_a.characters.filter { CODE_ALPHABET.contains($0) }
-        let code_b_chars = code_b.characters.filter { CODE_ALPHABET.contains($0) }
+        let code_a_chars = code_a.filter { CODE_ALPHABET.contains($0) }
+        let code_b_chars = code_b.filter { CODE_ALPHABET.contains($0) }
         var similar = 0
         for i in 0..<code_a_chars.count {
             if (i >= code_b_chars.count) {
