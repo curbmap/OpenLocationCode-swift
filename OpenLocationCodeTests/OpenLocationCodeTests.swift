@@ -38,6 +38,12 @@ class OpenLocationCodeTests: XCTestCase {
         // should only differ in the last two characters
         let filtered = zip(x!.getCode().characters, y!.getCode().characters).filter{$0 != $1}
         assert(filtered.count <= 2)
+        let z: OpenLocationCode? = try? OpenLocationCode(latitude: 90, longitude: 1, codeLength: 10)
+        assert(z != nil)
+        assert(z?.getCode() == "CFX3X2X2+X2")
+        let a: OpenLocationCode? = try? OpenLocationCode(latitude: 1, longitude: 1 codeLength: 11)
+        assert(a != nil)
+        assert(a?.getCode() == "6FH32222+222")
     }
     
     func testDecode() {
