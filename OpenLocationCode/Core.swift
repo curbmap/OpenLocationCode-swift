@@ -288,9 +288,15 @@ public class OpenLocationCode {
         // Initialize the multipliers to the same value, but they will change according to the dimensions of the grid
         var latPlaceMultiplier = RESOLUTION_STEPS.last!
         var lngPlaceMultiplier = RESOLUTION_STEPS.last!
+        // Adjust to positive range.
+        var adjustedLatitude += LATITUDE_MAX
+        var adjustedLongitude += LONGITUDE_MAX
+        // To avoid problems with floating point, get rid of the degrees.
+        adjustedLatitude = adjustedLatitude.truncatingRemainder(dividingBy: 1.0)
+        adjustedLongitude = adjustedLongitude.truncatingRemainder(dividingBy: 1.0)
         // This is the remainder after we have calculated up to the last RESOLUTION step
-        var adjustedLatitude = (latitude + LATITUDE_MAX).truncatingRemainder(dividingBy: latPlaceMultiplier)
-        var adjustedLongitude = (longitude + LONGITUDE_MAX).truncatingRemainder(dividingBy: lngPlaceMultiplier)
+        adjustedLatitude = adjustedLatitude.truncatingRemainder(dividingBy: latPlaceMultiplier)
+        adjustedLongitude = adjustedLongitude.truncatingRemainder(dividingBy: lngPlaceMultiplier)
         for _ in 0..<codeLenAfterDefaultLen {
             // FP Multiplication is usually less costly than division
             let row = Int((adjustedLatitude * MATRIX_FOR_PLUS_DIM.rows) / latPlaceMultiplier)
