@@ -7,7 +7,7 @@ For original code, see @google [Google's code](https://github.com/google/open-lo
 **To install this framework for your project**
 * add this line to your Podfile:
 ```
-pod 'OpenLocationCode' '~>0.0.4.2'
+pod 'OpenLocationCode' '~>0.0.4.7'
 ```
 
 * follow that with a pod install (you may have to update if you don't have the newest spec list)
