@@ -12,31 +12,31 @@ import XCTest
 class OpenLocationCodeTests: XCTestCase {
     let epsilon = 1E-6
     
-    override func setUp() {
+    @objc override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
-    override func tearDown() {
+    @objc override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
-    func testInitWithCode() {
+    @objc func testInitWithCode() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let x:OpenLocationCode? = try? OpenLocationCode("85634RQ4+X37")
         assert(x != nil)
     }
     
-    func testInitWithLatLng() {
+    @objc func testInitWithLatLng() {
         let x: OpenLocationCode? = try? OpenLocationCode(latitude: 34.139912, longitude: -118.194828, codeLength: 11)
         assert(x != nil)
         assert(x?.getCode() == "85634RQ4+X37")
         let y: OpenLocationCode? = try? OpenLocationCode(latitude: 34.139912, longitude: -118.194838, codeLength: 11)
         assert(y != nil)
         // should only differ in the last two characters
-        let filtered = zip(x!.getCode().characters, y!.getCode().characters).filter{$0 != $1}
+        let filtered = zip(x!.getCode(), y!.getCode()).filter{$0 != $1}
         assert(filtered.count <= 2)
         let z: OpenLocationCode? = try? OpenLocationCode(latitude: 90, longitude: 1, codeLength: 10)
         assert(z != nil)
@@ -46,14 +46,14 @@ class OpenLocationCodeTests: XCTestCase {
         assert(a?.getCode() == "6FH32222+222")
     }
     
-    func testDecode() {
+    @objc func testDecode() {
         let codeArea: CodeArea = try! OpenLocationCode.decode(code: "85634RQ4+X37")
         let test = codeArea.LatLng()
         assert(fabs(fabs(test.latitude) - fabs(34.139912)) < epsilon)
         assert(fabs(fabs(test.longitude) - fabs(-118.194828)) < epsilon)
     }
     
-    func testObjCreationWithCode() {
+    @objc func testObjCreationWithCode() {
         let olc = try? OpenLocationCode("8FW4V75V+8Q")
         let test = olc?.getCodeArea()
         if (test != nil) {
@@ -63,7 +63,7 @@ class OpenLocationCodeTests: XCTestCase {
         
     }
     
-    func testObjCreationWithLatLng() {
+    @objc func testObjCreationWithLatLng() {
         // just testing the limits here
         let olc = try? OpenLocationCode(latitude: 48.858093, longitude: 2.294694, codeLength: 15)
         let test = olc?.getCodeArea()
@@ -74,7 +74,7 @@ class OpenLocationCodeTests: XCTestCase {
         }
     }
     
-    func testBoundingBox() {
+    @objc func testBoundingBox() {
         let a = "85634WR4+CM"
         let b = "85634W00+"
         let c = try? OpenLocationCode.smallestBoundingBox(a, b)
@@ -82,7 +82,7 @@ class OpenLocationCodeTests: XCTestCase {
         print((c??.getCode())!)
     }
     
-    func testPerformanceExample() {
+    @objc func testPerformanceExample() {
         // See how long it takes to make a 1000 encoding and decodings (that's what this does behind the scenes)... the most complex of initializers with high resolution
         self.measure {
             for _ in 0...1000 {
