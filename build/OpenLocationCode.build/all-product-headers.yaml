@@ -1,0 +1,33 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/eliselkin/Documents/workspace/curbmap/OpenLocationCode/OpenLocationCode/build/Release-iphoneos/OpenLocationCode.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "OpenLocationCode-Swift.h",
+          'external-contents': "/Users/eliselkin/Documents/workspace/curbmap/OpenLocationCode/OpenLocationCode/build/Release-iphoneos/OpenLocationCode.framework/Headers/OpenLocationCode-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "OpenLocationCode.h",
+          'external-contents': "/Users/eliselkin/Documents/workspace/curbmap/OpenLocationCode/OpenLocationCode/OpenLocationCode/OpenLocationCode.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/eliselkin/Documents/workspace/curbmap/OpenLocationCode/OpenLocationCode/build/Release-iphoneos/OpenLocationCode.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/eliselkin/Documents/workspace/curbmap/OpenLocationCode/OpenLocationCode/build/OpenLocationCode.build/Release-iphoneos/OpenLocationCode.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}

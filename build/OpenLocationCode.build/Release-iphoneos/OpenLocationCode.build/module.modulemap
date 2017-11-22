@@ -1,0 +1,11 @@
+framework module OpenLocationCode {
+  umbrella header "OpenLocationCode.h"
+
+  export *
+  module * { export * }
+}
+
+module OpenLocationCode.Swift {
+    header "OpenLocationCode-Swift.h"
+    requires objc
+}

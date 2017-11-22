@@ -1,0 +1,10 @@
+framework module OpenLocationCode {
+  umbrella header "OpenLocationCode.h"
+
+  export *
+  module * { export * }
+}
+
+module OpenLocationCode.__Swift {
+    exclude header "OpenLocationCode-Swift.h"
+}

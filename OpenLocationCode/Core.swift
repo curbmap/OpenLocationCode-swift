@@ -20,25 +20,25 @@ enum OpenLocationCodeError:Error {
 }
 
 // Future version may switch from Float64 to NSDecimalNumber to handle more places of precision
-public class OpenLocationCode {
-    static private let DEFAULT_CODE_LENGTH: Int = 10 // Not including + IMPORTANT!! This is the point where lat/lng diverge in relationship
-    static private let LENGTH_BASE: Int = 8 // For a long code
-    static private let MAX_CODE_LENGTH: Int = 14 // Not including +, This is just a suggestion, since things are skewed after 11
-    static private let CODE_ALPHABET: [Character] = ["2","3","4","5","6","7","8","9","C","F","G","H","J","M","P","Q","R","V","W","X"]
-    static private let PLUS_SEPARATOR: Character = "+"
-    static private let BASE_FOR_PREFIX: Float64 = 20
-    static private let MATRIX_FOR_PLUS:[[Character]] = [["2", "3", "4", "5"],
+public class OpenLocationCode : NSObject {
+    static public let DEFAULT_CODE_LENGTH: Int = 10 // Not including + IMPORTANT!! This is the point where lat/lng diverge in relationship
+    static public let LENGTH_BASE: Int = 8 // For a long code
+    static public let MAX_CODE_LENGTH: Int = 14 // Not including +, This is just a suggestion, since things are skewed after 11
+    static public let CODE_ALPHABET: [Character] = ["2","3","4","5","6","7","8","9","C","F","G","H","J","M","P","Q","R","V","W","X"]
+    static public let PLUS_SEPARATOR: Character = "+"
+    static public let BASE_FOR_PREFIX: Float64 = 20
+    static public let MATRIX_FOR_PLUS:[[Character]] = [["2", "3", "4", "5"],
                                                         ["6", "7", "8", "9"],
                                                         ["C", "F", "G", "H"],
                                                         ["J", "M", "P", "Q"],
                                                         ["R", "V", "W", "X"]]
-    static private let MATRIX_FOR_PLUS_DIM: (rows: Float64, cols: Float64) = (rows: 5.0, cols: 4.0)
-    static private let PADDING_CHARACTER: Character = "0"
+    static public let MATRIX_FOR_PLUS_DIM: (rows: Float64, cols: Float64) = (rows: 5.0, cols: 4.0)
+    static public let PADDING_CHARACTER: Character = "0"
     static public let LONGITUDE_MIN: Float64 = -180.0
     static public let LONGITUDE_MAX: Float64 = 180.0
     static public let LATITUDE_MIN: Float64 = -90.0
     static public let LATITUDE_MAX: Float64 = 90.0
-    static private let RESOLUTION_STEPS:[Float64] = [20.0, 1.0, 0.05, 0.0025, 0.000125] // 5 pairs of Lat, Lng
+    static public let RESOLUTION_STEPS:[Float64] = [20.0, 1.0, 0.05, 0.0025, 0.000125] // 5 pairs of Lat, Lng
     private var _code: String = ""
     private var _code_type: Int = -1
     private var _LatLng: (latitude: Float64, longitude: Float64) = (latitude: 0.0, longitude: 0.0)
@@ -50,11 +50,12 @@ public class OpenLocationCode {
      *
      */
     public init(_ code: String) throws {
-        self._code_type = OpenLocationCode.isValidOLC(code: code.uppercased())
-        if (_code_type == 0 || _code_type == 1) {
-            self._code = code.uppercased()
+        let code_type = OpenLocationCode.isValidOLC(code: code.uppercased())
+         _code_type = code_type
+        if (code_type == 0 || code_type == 1) {
+            _code = code.uppercased()
             // It's already a valid code, so get the code area for it as well
-            self._codeArea = try! OpenLocationCode.decode(code: self._code)
+            _codeArea = try! OpenLocationCode.decode(code: _code)
         } else {
             throw OpenLocationCodeError.invalidCode
         }
@@ -65,7 +66,7 @@ public class OpenLocationCode {
      */
     public init(latitude: Float64, longitude: Float64, codeLength: Int) throws {
         self._LatLng = (latitude: latitude, longitude: longitude)
-        self._code = try! OpenLocationCode.encode(LatLng: self._LatLng, codeLength: codeLength)
+        self._code = try! OpenLocationCode.encode(latitude: latitude, longitude: longitude, codeLength: codeLength)
         self._codeArea = try! OpenLocationCode.decode(code: self._code)
     }
     public convenience init(latitude: Float64, longitude: Float64) throws {
@@ -79,7 +80,7 @@ public class OpenLocationCode {
         return self._codeArea
     }
     //MARK: - Validating
-    public static func isValidOLC(code: String) -> Int {
+    @objc public static func isValidOLC(code: String) -> Int {
         // Some might argue that an empty code is valid, but we won't here
         if (code == "") {
             return -1
@@ -140,7 +141,7 @@ public class OpenLocationCode {
      * Short codes should be 4 characters, a +, followed by 0 or more characters.
      * Generally, these codes are 4-7 characters long, not including the +
      */
-    public static func isValidShortOLC(code: String, separator_pos: Int) -> Bool {
+    @objc public static func isValidShortOLC(code: String, separator_pos: Int) -> Bool {
         if (separator_pos >= 0 && separator_pos < OpenLocationCode.LENGTH_BASE) {
             return true
         }
@@ -155,7 +156,7 @@ public class OpenLocationCode {
      
      * Here we check the bounds of the code to make sure it's within
      */
-    public static func isValidLongOLC(code: String, separator_pos: Int) -> Bool {
+    @objc public static func isValidLongOLC(code: String, separator_pos: Int) -> Bool {
         // If it's a short code, it's not a long code... See google python implementation
         if (OpenLocationCode.isValidShortOLC(code: code, separator_pos: separator_pos)) {
             return false
@@ -175,12 +176,12 @@ public class OpenLocationCode {
     }
     
     // MARK: - Encoding From LatLng pair
-    public static func encode(LatLng: (latitude: Float64, longitude: Float64), codeLength: Int = OpenLocationCode.DEFAULT_CODE_LENGTH) throws -> String {
+    @objc public static func encode(latitude: Float64, longitude: Float64, codeLength: Int = OpenLocationCode.DEFAULT_CODE_LENGTH) throws -> String {
         if ((codeLength < 2) || (codeLength < LENGTH_BASE && codeLength % 2 == 1)) {
             throw OpenLocationCodeError.encodingError
         }
-        var working_latitude = clipLatitude(latitude: LatLng.latitude)
-        let working_longitude = normalizeLongitude(longitude: LatLng.longitude)
+        var working_latitude = clipLatitude(latitude: latitude)
+        let working_longitude = normalizeLongitude(longitude: longitude)
         if (working_latitude == 90.0) {
             working_latitude = working_latitude - precision_code_length(codeLength: codeLength)
         }
@@ -195,7 +196,7 @@ public class OpenLocationCode {
     /*
      * If the latitude is greater than 90.0, make it 90.0, if less than -90.0, make it -90.0
      */
-    public static func clipLatitude(latitude: Float64) -> Float64 {
+    @objc public static func clipLatitude(latitude: Float64) -> Float64 {
         return fmin(90.0, fmax(-90.0, latitude))
     }
     
@@ -204,7 +205,7 @@ public class OpenLocationCode {
      * If longitude is less than min, make it a positive angle (less than 180). 
      * If a longitude is greater than max, make it a negative one (greater than -180).
      */
-    public static func normalizeLongitude(longitude: Float64) -> Float64 {
+    @objc public static func normalizeLongitude(longitude: Float64) -> Float64 {
         var tempLongitude = longitude
         while (tempLongitude < OpenLocationCode.LONGITUDE_MIN) {
             tempLongitude = longitude + (2.0 * LONGITUDE_MAX)
@@ -220,7 +221,7 @@ public class OpenLocationCode {
      * From C++ version of OLC implementation
      * https://github.com/google/open-location-code/blob/master/cpp/openlocationcode.cc
      */
-    public static func powNeg(base: Float64, exponent: Float64) -> Float64 {
+    @objc public static func powNeg(base: Float64, exponent: Float64) -> Float64 {
         if (exponent == 0) {
             return 1.0
         } else if (exponent > 0) {
@@ -231,7 +232,7 @@ public class OpenLocationCode {
     }
     
     // MARK: Calculate Precision For OLC length
-    public static func precision_code_length(codeLength: Int) -> Float64 {
+    @objc public static func precision_code_length(codeLength: Int) -> Float64 {
         if (codeLength <= DEFAULT_CODE_LENGTH) {
             return powNeg(base: BASE_FOR_PREFIX, exponent: floor(Double(Int(codeLength / -2) + 2)));
         }
@@ -242,7 +243,7 @@ public class OpenLocationCode {
     /*
      * https://github.com/google/open-location-code/blob/master/python/openlocationcode.py
      */
-    private static func encodePairs(latitude: Float64, longitude: Float64, codeLength: Int) -> String {
+    @objc private static func encodePairs(latitude: Float64, longitude: Float64, codeLength: Int) -> String {
         var code: [Character] = []
         var adjustedLatitude = latitude + LATITUDE_MAX
         var adjustedLongitude = longitude + LONGITUDE_MAX
@@ -282,7 +283,7 @@ public class OpenLocationCode {
     
     // Also stealing from the python and rust implementations from google
     // https://github.com/google/open-location-code/blob/master/python/openlocationcode.py
-    private static func encodeGrid(latitude: Float64, longitude: Float64, codeLenAfterDefaultLen: Int) -> String {
+    @objc private static func encodeGrid(latitude: Float64, longitude: Float64, codeLenAfterDefaultLen: Int) -> String {
         var code: [Character] = []
         // Initialize the multipliers to the same value, but they will change according to the dimensions of the grid
         var latPlaceMultiplier = RESOLUTION_STEPS.last!
@@ -326,10 +327,10 @@ public class OpenLocationCode {
         var code_suffix = ""
         if (code_without_plus_array.count >= 10) {
             suffix_start = code_without_plus.index(prefix_start, offsetBy: 10)
-            code_prefix = code_without_plus.substring(with: prefix_start..<suffix_start)
-            code_suffix = code_without_plus.substring(with: suffix_start..<code_without_plus.endIndex)
+            code_prefix = String(code_without_plus[prefix_start..<suffix_start])
+            code_suffix = String(code_without_plus[suffix_start..<code_without_plus.endIndex])
         } else {
-            code_prefix = code_without_plus.substring(with: prefix_start..<code_without_plus.endIndex)
+            code_prefix = String(code_without_plus[prefix_start..<code_without_plus.endIndex])
         }
         // Decode the first 10 or fewer
         let prefixArea = decodePairs(code_prefix)
@@ -412,22 +413,22 @@ public class OpenLocationCode {
             if (i >= code_b_chars.count) {
                 break
             }
-            if code_a_chars[i] != code_b_chars[i] {
-                print(code_a_chars[i])
-                print(code_b_chars[i])
-                break
+            let subset_a = code_a_chars[...code_a_chars.index(code_a_chars.startIndex, offsetBy:i)]
+            let subset_b = code_b_chars[...code_b_chars.index(code_b_chars.startIndex, offsetBy:i)]
+            if subset_a.elementsEqual(subset_b) {
+                similar = i
+            } else {
+                break;
             }
-            similar += 1
         }
         if (similar <= 1) {
             throw OpenLocationCodeError.dissimilarRegions
         }
-        print(similar)
         if (similar <= 9 && similar % 2 == 1) {
             // Remove one more, because they are still in pairs
             similar -= 1
         }
-        var new_chars = code_a_chars.prefix(upTo: similar)
+        var new_chars = code_a_chars[...code_a_chars.index(code_a_chars.startIndex, offsetBy:similar+1)]
         while new_chars.count < LENGTH_BASE {
             new_chars.append(PADDING_CHARACTER)
         }
@@ -435,9 +436,8 @@ public class OpenLocationCode {
             new_chars.append(PLUS_SEPARATOR)
         } else if (new_chars.count > LENGTH_BASE) {
             // reinsert +
-            new_chars.insert(PLUS_SEPARATOR, at: LENGTH_BASE+1)
+            new_chars.insert(PLUS_SEPARATOR, at: code_a_chars.index(code_a_chars.startIndex, offsetBy:(LENGTH_BASE+1)))
         }
-        print(String(new_chars))
         return try? OpenLocationCode(String(new_chars))
     }
 }
