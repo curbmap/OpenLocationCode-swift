@@ -17,21 +17,22 @@ enum OpenLocationCodeError:Error {
     case encodingError
     case decodingError
     case dissimilarRegions
+    case exceedsMaxCodeLength
 }
 
 // Future version may switch from Float64 to NSDecimalNumber to handle more places of precision
 public class OpenLocationCode : NSObject {
     static public let DEFAULT_CODE_LENGTH: Int = 10 // Not including + IMPORTANT!! This is the point where lat/lng diverge in relationship
     static public let LENGTH_BASE: Int = 8 // For a long code
-    static public let MAX_CODE_LENGTH: Int = 14 // Not including +, This is just a suggestion, since things are skewed after 11
+    static public let MAX_CODE_LENGTH: Int = 15 // Not including +, This is just a suggestion, since things are skewed after 11
     static public let CODE_ALPHABET: [Character] = ["2","3","4","5","6","7","8","9","C","F","G","H","J","M","P","Q","R","V","W","X"]
     static public let PLUS_SEPARATOR: Character = "+"
     static public let BASE_FOR_PREFIX: Float64 = 20
     static public let MATRIX_FOR_PLUS:[[Character]] = [["2", "3", "4", "5"],
-                                                        ["6", "7", "8", "9"],
-                                                        ["C", "F", "G", "H"],
-                                                        ["J", "M", "P", "Q"],
-                                                        ["R", "V", "W", "X"]]
+                                                       ["6", "7", "8", "9"],
+                                                       ["C", "F", "G", "H"],
+                                                       ["J", "M", "P", "Q"],
+                                                       ["R", "V", "W", "X"]]
     static public let MATRIX_FOR_PLUS_DIM: (rows: Float64, cols: Float64) = (rows: 5.0, cols: 4.0)
     static public let PADDING_CHARACTER: Character = "0"
     static public let LONGITUDE_MIN: Float64 = -180.0
@@ -50,8 +51,11 @@ public class OpenLocationCode : NSObject {
      *
      */
     public init(_ code: String) throws {
+        if (code.lengthOfBytes(using: .ascii) > OpenLocationCode.MAX_CODE_LENGTH + 1) {
+            throw OpenLocationCodeError.exceedsMaxCodeLength
+        }
         let code_type = OpenLocationCode.isValidOLC(code: code.uppercased())
-         _code_type = code_type
+        _code_type = code_type
         if (code_type == 0 || code_type == 1) {
             _code = code.uppercased()
             // It's already a valid code, so get the code area for it as well
@@ -65,8 +69,12 @@ public class OpenLocationCode : NSObject {
      * Initializers from lat/lng which do both a forward and backward pass
      */
     public init(latitude: Float64, longitude: Float64, codeLength: Int) throws {
+        if (codeLength > OpenLocationCode.MAX_CODE_LENGTH) {
+            throw OpenLocationCodeError.exceedsMaxCodeLength
+        }
         self._LatLng = (latitude: latitude, longitude: longitude)
         self._code = try! OpenLocationCode.encode(latitude: latitude, longitude: longitude, codeLength: codeLength)
+        print("SELF CODE: \(self._code)")
         self._codeArea = try! OpenLocationCode.decode(code: self._code)
     }
     public convenience init(latitude: Float64, longitude: Float64) throws {
@@ -80,7 +88,7 @@ public class OpenLocationCode : NSObject {
         return self._codeArea
     }
     //MARK: - Validating
-    @objc public static func isValidOLC(code: String) -> Int {
+    public static func isValidOLC(code: String) -> Int {
         // Some might argue that an empty code is valid, but we won't here
         if (code == "") {
             return -1
@@ -115,7 +123,7 @@ public class OpenLocationCode : NSObject {
             }
             pos += 1
         }
-
+        
         /*
          * Must have even padding. Padding can only happen before the separator.
          */
@@ -141,13 +149,13 @@ public class OpenLocationCode : NSObject {
      * Short codes should be 4 characters, a +, followed by 0 or more characters.
      * Generally, these codes are 4-7 characters long, not including the +
      */
-    @objc public static func isValidShortOLC(code: String, separator_pos: Int) -> Bool {
+    public static func isValidShortOLC(code: String, separator_pos: Int) -> Bool {
         if (separator_pos >= 0 && separator_pos < OpenLocationCode.LENGTH_BASE) {
             return true
         }
         return false
     }
-
+    
     // MARK: - Long Open Location Codes
     /**
      * Long codes are at least 8 characters long. They may then include a + followed by 
@@ -156,7 +164,7 @@ public class OpenLocationCode : NSObject {
      
      * Here we check the bounds of the code to make sure it's within
      */
-    @objc public static func isValidLongOLC(code: String, separator_pos: Int) -> Bool {
+    public static func isValidLongOLC(code: String, separator_pos: Int) -> Bool {
         // If it's a short code, it's not a long code... See google python implementation
         if (OpenLocationCode.isValidShortOLC(code: code, separator_pos: separator_pos)) {
             return false
@@ -176,7 +184,10 @@ public class OpenLocationCode : NSObject {
     }
     
     // MARK: - Encoding From LatLng pair
-    @objc public static func encode(latitude: Float64, longitude: Float64, codeLength: Int = OpenLocationCode.DEFAULT_CODE_LENGTH) throws -> String {
+    public static func encode(latitude: Float64, longitude: Float64, codeLength: Int = OpenLocationCode.DEFAULT_CODE_LENGTH) throws -> String {
+        if (codeLength > OpenLocationCode.MAX_CODE_LENGTH) {
+            throw OpenLocationCodeError.exceedsMaxCodeLength
+        }
         if ((codeLength < 2) || (codeLength < LENGTH_BASE && codeLength % 2 == 1)) {
             throw OpenLocationCodeError.encodingError
         }
@@ -196,7 +207,7 @@ public class OpenLocationCode : NSObject {
     /*
      * If the latitude is greater than 90.0, make it 90.0, if less than -90.0, make it -90.0
      */
-    @objc public static func clipLatitude(latitude: Float64) -> Float64 {
+    public static func clipLatitude(latitude: Float64) -> Float64 {
         return fmin(90.0, fmax(-90.0, latitude))
     }
     
@@ -205,7 +216,7 @@ public class OpenLocationCode : NSObject {
      * If longitude is less than min, make it a positive angle (less than 180). 
      * If a longitude is greater than max, make it a negative one (greater than -180).
      */
-    @objc public static func normalizeLongitude(longitude: Float64) -> Float64 {
+    public static func normalizeLongitude(longitude: Float64) -> Float64 {
         var tempLongitude = longitude
         while (tempLongitude < OpenLocationCode.LONGITUDE_MIN) {
             tempLongitude = longitude + (2.0 * LONGITUDE_MAX)
@@ -221,7 +232,7 @@ public class OpenLocationCode : NSObject {
      * From C++ version of OLC implementation
      * https://github.com/google/open-location-code/blob/master/cpp/openlocationcode.cc
      */
-    @objc public static func powNeg(base: Float64, exponent: Float64) -> Float64 {
+    public static func powNeg(base: Float64, exponent: Float64) -> Float64 {
         if (exponent == 0) {
             return 1.0
         } else if (exponent > 0) {
@@ -232,7 +243,7 @@ public class OpenLocationCode : NSObject {
     }
     
     // MARK: Calculate Precision For OLC length
-    @objc public static func precision_code_length(codeLength: Int) -> Float64 {
+    public static func precision_code_length(codeLength: Int) -> Float64 {
         if (codeLength <= DEFAULT_CODE_LENGTH) {
             return powNeg(base: BASE_FOR_PREFIX, exponent: floor(Double(Int(codeLength / -2) + 2)));
         }
@@ -243,7 +254,7 @@ public class OpenLocationCode : NSObject {
     /*
      * https://github.com/google/open-location-code/blob/master/python/openlocationcode.py
      */
-    @objc private static func encodePairs(latitude: Float64, longitude: Float64, codeLength: Int) -> String {
+    private static func encodePairs(latitude: Float64, longitude: Float64, codeLength: Int) -> String {
         var code: [Character] = []
         var adjustedLatitude = latitude + LATITUDE_MAX
         var adjustedLongitude = longitude + LONGITUDE_MAX
@@ -283,7 +294,7 @@ public class OpenLocationCode : NSObject {
     
     // Also stealing from the python and rust implementations from google
     // https://github.com/google/open-location-code/blob/master/python/openlocationcode.py
-    @objc private static func encodeGrid(latitude: Float64, longitude: Float64, codeLenAfterDefaultLen: Int) -> String {
+    private static func encodeGrid(latitude: Float64, longitude: Float64, codeLenAfterDefaultLen: Int) -> String {
         var code: [Character] = []
         // Initialize the multipliers to the same value, but they will change according to the dimensions of the grid
         var latPlaceMultiplier = RESOLUTION_STEPS.last!
@@ -313,7 +324,9 @@ public class OpenLocationCode : NSObject {
     
     //MARK: - Decoding
     public static func decode(code: String) throws -> CodeArea {
-        
+        if (code.lengthOfBytes(using: .ascii) > OpenLocationCode.MAX_CODE_LENGTH + 1) {
+            throw OpenLocationCodeError.exceedsMaxCodeLength
+        }
         if (OpenLocationCode.isValidOLC(code: code) != 1){
             throw OpenLocationCodeError.decodingError
         }
@@ -343,7 +356,7 @@ public class OpenLocationCode : NSObject {
          * This narrows the space from the low point to the grid's refinement region
          * There is a chance the actual original encoded point was between the center and the high,
          * but I'm not sure how much that matters after the 10 character prefix
-        */
+         */
         return CodeArea(latitudeLow: prefixArea.latitudeLow + gridArea.latitudeLow,
                         longitudeLow: prefixArea.longitudeLow + gridArea.longitudeLow,
                         latitudeHigh: prefixArea.latitudeLow + gridArea.latitudeHigh,

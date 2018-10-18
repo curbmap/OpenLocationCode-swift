@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "OpenLocationCode"
-  s.version      = "0.0.5.2"
-  s.summary      = "Google's Open Location Code spec implemented in Swift 4."
+  s.version      = "0.0.5.3"
+  s.summary      = "Google's Open Location Code spec implemented in Swift 4.2"
 
   s.description  = <<-DESC
   OpenLocationCode-swift is an implementation similar to the code released by Google on their github repository for
@@ -43,5 +43,5 @@ Pod::Spec.new do |s|
   #  where they will only apply to your library. If you depend on other Podspecs
   #  you can include multiple dependencies to ensure it works.
 
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4' }
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.2' }
 end

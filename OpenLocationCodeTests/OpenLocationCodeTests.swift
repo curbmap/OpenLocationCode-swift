@@ -12,24 +12,34 @@ import XCTest
 class OpenLocationCodeTests: XCTestCase {
     let epsilon = 1E-6
     
-    @objc override func setUp() {
+    override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
-    @objc override func tearDown() {
+    override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
+    func testDecodeExceedsMaxLength() {
+        let x: OpenLocationCode? = try? OpenLocationCode("85634RQ4+X3777777")
+        assert(x == nil)
+    }
     
-    @objc func testInitWithCode() {
+    func testEncodeExceedsMaxLength() {
+        let x: String? = try? OpenLocationCode.encode(latitude: 34.139912, longitude: -118.194828, codeLength: 16)
+        print(x)
+        assert(x == nil)
+    }
+    
+    func testInitWithCode() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let x:OpenLocationCode? = try? OpenLocationCode("85634RQ4+X37")
         assert(x != nil)
     }
     
-    @objc func testInitWithLatLng() {
+    func testInitWithLatLng() {
         let x: OpenLocationCode? = try? OpenLocationCode(latitude: 34.139912, longitude: -118.194828, codeLength: 11)
         assert(x != nil)
         assert(x?.getCode() == "85634RQ4+X37")
@@ -46,14 +56,14 @@ class OpenLocationCodeTests: XCTestCase {
         assert(a?.getCode() == "6FH32222+222")
     }
     
-    @objc func testDecode() {
+    func testDecode() {
         let codeArea: CodeArea = try! OpenLocationCode.decode(code: "85634RQ4+X37")
         let test = codeArea.LatLng()
         assert(fabs(fabs(test.latitude) - fabs(34.139912)) < epsilon)
         assert(fabs(fabs(test.longitude) - fabs(-118.194828)) < epsilon)
     }
     
-    @objc func testObjCreationWithCode() {
+    func testObjCreationWithCode() {
         let olc = try? OpenLocationCode("8FW4V75V+8Q")
         let test = olc?.getCodeArea()
         if (test != nil) {
@@ -66,6 +76,7 @@ class OpenLocationCodeTests: XCTestCase {
     @objc func testObjCreationWithLatLng() {
         // just testing the limits here
         let olc = try? OpenLocationCode(latitude: 48.858093, longitude: 2.294694, codeLength: 15)
+        print("OLC \(olc)");
         let test = olc?.getCodeArea()
         if (test != nil) {
             print(test!.LatLng()) // With a code length of 15 we should have resolution down to the 6th decimal place
