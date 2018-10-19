@@ -7,7 +7,7 @@ Open location code framework for swift For original code, see @google
 
 **To install this framework for your project**
 
-* add this line to your Podfile: `pod 'OpenLocationCode' '~>0.0.5.1'`
+* add this line to your Podfile: `pod 'OpenLocationCode' '~>0.0.5.3'`
 * follow that with a pod install (you may have to update if you don't have the newest spec list)
 
 Then, in your project swift file.
