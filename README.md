@@ -35,6 +35,8 @@ OpenLocationCode.decode(code: String)
 ** As of 0.5.3** 10/18/2018
 
 Code is now strictly enforced to be less than or equal to 15 characters. 
+
+
 ** As of 0.5.1** 11/22/2017
 
 Code is now compliant with Swift 4.0. If you need 3.2 compatible use release 0.0.4.7.
