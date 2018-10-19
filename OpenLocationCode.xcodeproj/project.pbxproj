@@ -11,6 +11,7 @@
 		D56E176B1F2AC3DD00072EC5 /* CodeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */; };
 		D599D317217930010092ADCD /* OpenLocationCode.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D599D316217930010092ADCD /* OpenLocationCode.podspec */; };
 		D599D319217930CE0092ADCD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D599D318217930CE0092ADCD /* README.md */; };
+		D599D31B2179BF3B0092ADCD /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = D599D31A2179BF3B0092ADCD /* CHANGELOG */; };
 		D5A3C53A1F283B50001C10B8 /* OpenLocationCode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5A3C5301F283B50001C10B8 /* OpenLocationCode.framework */; };
 		D5A3C53F1F283B50001C10B8 /* OpenLocationCodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A3C53E1F283B50001C10B8 /* OpenLocationCodeTests.swift */; };
 		D5A3C5411F283B50001C10B8 /* OpenLocationCode.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -32,6 +33,7 @@
 		D56E176A1F2AC3DD00072EC5 /* CodeArea.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeArea.swift; sourceTree = "<group>"; };
 		D599D316217930010092ADCD /* OpenLocationCode.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OpenLocationCode.podspec; sourceTree = SOURCE_ROOT; };
 		D599D318217930CE0092ADCD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		D599D31A2179BF3B0092ADCD /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = SOURCE_ROOT; };
 		D5A3C5301F283B50001C10B8 /* OpenLocationCode.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenLocationCode.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenLocationCode.h; sourceTree = "<group>"; };
 		D5A3C5341F283B50001C10B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 		D5A3C5321F283B50001C10B8 /* OpenLocationCode */ = {
 			isa = PBXGroup;
 			children = (
+				D599D31A2179BF3B0092ADCD /* CHANGELOG */,
 				D599D318217930CE0092ADCD /* README.md */,
 				D599D316217930010092ADCD /* OpenLocationCode.podspec */,
 				D5A3C5331F283B50001C10B8 /* OpenLocationCode.h */,
@@ -199,6 +202,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D599D319217930CE0092ADCD /* README.md in Resources */,
+				D599D31B2179BF3B0092ADCD /* CHANGELOG in Resources */,
 				D599D317217930010092ADCD /* OpenLocationCode.podspec in Resources */,
 				D56E17691F2A974000072EC5 /* LICENSE in Resources */,
 			);
