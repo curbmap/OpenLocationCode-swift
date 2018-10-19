@@ -1,0 +1,2 @@
+Oct-2018 - 0.0.5.3 Update to Swift 4.2. Fix length of codes to less than 15 characters.
+Dec-2017 - 0.0.5.2 For some reason podspec wasn't in sync with actual version... update for swift 4
