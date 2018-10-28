@@ -24,7 +24,7 @@ enum OpenLocationCodeError:Error {
 public class OpenLocationCode : NSObject {
     static public let DEFAULT_CODE_LENGTH: Int = 10 // Not including + IMPORTANT!! This is the point where lat/lng diverge in relationship
     static public let LENGTH_BASE: Int = 8 // For a long code
-    static public let MAX_CODE_LENGTH: Int = 15 // Not including +, This is just a suggestion, since things are skewed after 11
+    static public let MAX_CODE_LENGTH: Int = 15 // Not including +
     static public let CODE_ALPHABET: [Character] = ["2","3","4","5","6","7","8","9","C","F","G","H","J","M","P","Q","R","V","W","X"]
     static public let PLUS_SEPARATOR: Character = "+"
     static public let BASE_FOR_PREFIX: Float64 = 20
@@ -51,15 +51,15 @@ public class OpenLocationCode : NSObject {
      *
      */
     public init(_ code: String) throws {
-        if (code.lengthOfBytes(using: .ascii) > OpenLocationCode.MAX_CODE_LENGTH + 1) {
-            throw OpenLocationCodeError.exceedsMaxCodeLength
-        }
         let code_type = OpenLocationCode.isValidOLC(code: code.uppercased())
         _code_type = code_type
         if (code_type == 0 || code_type == 1) {
-            _code = code.uppercased()
+            let _code = code.uppercased()
+            let codeLength = min(_code.count, OpenLocationCode.MAX_CODE_LENGTH)
+            let characterEnd = _code.index(_code.startIndex, offsetBy: codeLength)
+            let sub_code = String(code.uppercased()[..<characterEnd])
             // It's already a valid code, so get the code area for it as well
-            _codeArea = try! OpenLocationCode.decode(code: _code)
+            _codeArea = try! OpenLocationCode.decode(code: sub_code)
         } else {
             throw OpenLocationCodeError.invalidCode
         }
@@ -69,12 +69,12 @@ public class OpenLocationCode : NSObject {
      * Initializers from lat/lng which do both a forward and backward pass
      */
     public init(latitude: Float64, longitude: Float64, codeLength: Int) throws {
-        if (codeLength > OpenLocationCode.MAX_CODE_LENGTH) {
-            throw OpenLocationCodeError.exceedsMaxCodeLength
+        var _codeLength = codeLength
+        if (codeLength > 15) {
+            _codeLength  = 15
         }
         self._LatLng = (latitude: latitude, longitude: longitude)
-        self._code = try! OpenLocationCode.encode(latitude: latitude, longitude: longitude, codeLength: codeLength)
-        print("SELF CODE: \(self._code)")
+        self._code = try! OpenLocationCode.encode(latitude: latitude, longitude: longitude, codeLength: _codeLength)
         self._codeArea = try! OpenLocationCode.decode(code: self._code)
     }
     public convenience init(latitude: Float64, longitude: Float64) throws {
@@ -185,20 +185,21 @@ public class OpenLocationCode : NSObject {
     
     // MARK: - Encoding From LatLng pair
     public static func encode(latitude: Float64, longitude: Float64, codeLength: Int = OpenLocationCode.DEFAULT_CODE_LENGTH) throws -> String {
+        var _codeLength = codeLength
         if (codeLength > OpenLocationCode.MAX_CODE_LENGTH) {
-            throw OpenLocationCodeError.exceedsMaxCodeLength
+            _codeLength = OpenLocationCode.MAX_CODE_LENGTH
         }
-        if ((codeLength < 2) || (codeLength < LENGTH_BASE && codeLength % 2 == 1)) {
+        if ((_codeLength < 2) || (_codeLength < LENGTH_BASE && _codeLength % 2 == 1)) {
             throw OpenLocationCodeError.encodingError
         }
         var working_latitude = clipLatitude(latitude: latitude)
         let working_longitude = normalizeLongitude(longitude: longitude)
         if (working_latitude == 90.0) {
-            working_latitude = working_latitude - precision_code_length(codeLength: codeLength)
+            working_latitude = working_latitude - precision_code_length(codeLength: _codeLength)
         }
-        var code: String = encodePairs(latitude: working_latitude, longitude: working_longitude, codeLength: min(codeLength, DEFAULT_CODE_LENGTH))
-        if (codeLength > DEFAULT_CODE_LENGTH) {
-            code += encodeGrid(latitude: working_latitude, longitude: working_longitude, codeLenAfterDefaultLen: codeLength - DEFAULT_CODE_LENGTH)
+        var code: String = encodePairs(latitude: working_latitude, longitude: working_longitude, codeLength: min(_codeLength, DEFAULT_CODE_LENGTH))
+        if (_codeLength > DEFAULT_CODE_LENGTH) {
+            code += encodeGrid(latitude: working_latitude, longitude: working_longitude, codeLenAfterDefaultLen: _codeLength - DEFAULT_CODE_LENGTH)
         }
         return code
     }
@@ -324,26 +325,22 @@ public class OpenLocationCode : NSObject {
     
     //MARK: - Decoding
     public static func decode(code: String) throws -> CodeArea {
-        if (code.lengthOfBytes(using: .ascii) > OpenLocationCode.MAX_CODE_LENGTH + 1) {
-            throw OpenLocationCodeError.exceedsMaxCodeLength
-        }
         if (OpenLocationCode.isValidOLC(code: code) != 1){
             throw OpenLocationCodeError.decodingError
         }
-        
-        let code_without_plus_array = code.uppercased().filter{ CODE_ALPHABET.contains($0) }
-        let code_without_plus = String(code_without_plus_array)
+        var preprep_code = String(code.uppercased().filter{ CODE_ALPHABET.contains($0) })
+        let codeLength = min(preprep_code.lengthOfBytes(using: .ascii), OpenLocationCode.MAX_CODE_LENGTH)
+        let codeOffset = preprep_code.index(preprep_code.startIndex, offsetBy: codeLength)
+        let _code = preprep_code[..<codeOffset]
         // Separate the first 10 from the rest
-        let prefix_start = code_without_plus.startIndex
-        let suffix_start: String.Index
         var code_prefix = ""
         var code_suffix = ""
-        if (code_without_plus_array.count >= 10) {
-            suffix_start = code_without_plus.index(prefix_start, offsetBy: 10)
-            code_prefix = String(code_without_plus[prefix_start..<suffix_start])
-            code_suffix = String(code_without_plus[suffix_start..<code_without_plus.endIndex])
+        if (codeLength >= 10) {
+            let suffix_start = _code.index(_code.startIndex, offsetBy: 10)
+            code_prefix = String(_code[_code.startIndex..<suffix_start])
+            code_suffix = String(_code[suffix_start..<_code.endIndex])
         } else {
-            code_prefix = String(code_without_plus[prefix_start..<code_without_plus.endIndex])
+            code_prefix = String(_code)
         }
         // Decode the first 10 or fewer
         let prefixArea = decodePairs(code_prefix)

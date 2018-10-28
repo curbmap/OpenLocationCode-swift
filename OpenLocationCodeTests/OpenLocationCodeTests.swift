@@ -23,18 +23,16 @@ class OpenLocationCodeTests: XCTestCase {
     }
     func testDecodeExceedsMaxLength() {
         let x: OpenLocationCode? = try? OpenLocationCode("85634RQ4+X3777777")
-        assert(x == nil)
+        assert(x != nil)
     }
     
     func testEncodeExceedsMaxLength() {
         let x: String? = try? OpenLocationCode.encode(latitude: 34.139912, longitude: -118.194828, codeLength: 16)
-        print(x)
-        assert(x == nil)
+        assert(x != nil)
+        assert(x!.count == 16) // including plus
     }
     
     func testInitWithCode() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
         let x:OpenLocationCode? = try? OpenLocationCode("85634RQ4+X37")
         assert(x != nil)
     }
