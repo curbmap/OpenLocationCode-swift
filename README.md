@@ -32,6 +32,10 @@ OpenLocationCode.encode(LatLng: (latitude: y, longitude: x), codeLength: Int)
 ```
 OpenLocationCode.decode(code: String)
 ```
+** As of 0.5.5** 10/27/2018
+
+No longer throws when exceeding maximum code length. Code lengths are strictly limited to less than 15 characters though. Basically performs a truncation of the string or reduction of requested code length for encoding.
+
 ** As of 0.5.3** 10/18/2018
 
 Code is now strictly enforced to be less than or equal to 15 characters. 
