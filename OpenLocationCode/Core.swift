@@ -328,7 +328,7 @@ public class OpenLocationCode : NSObject {
         if (OpenLocationCode.isValidOLC(code: code) != 1){
             throw OpenLocationCodeError.decodingError
         }
-        var preprep_code = String(code.uppercased().filter{ CODE_ALPHABET.contains($0) })
+        let preprep_code = String(code.uppercased().filter{ CODE_ALPHABET.contains($0) })
         let codeLength = min(preprep_code.lengthOfBytes(using: .ascii), OpenLocationCode.MAX_CODE_LENGTH)
         let codeOffset = preprep_code.index(preprep_code.startIndex, offsetBy: codeLength)
         let _code = preprep_code[..<codeOffset]
